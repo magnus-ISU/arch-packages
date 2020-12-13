@@ -12,10 +12,11 @@ static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
+static const char col_gold[]        = "#dbb92e";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+	[SchemeSel]  = { col_gray1, col_gold,  col_gold  },
 };
 
 /* tagging */
@@ -36,11 +37,14 @@ static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] 
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
 
+#include "fibonacci.c"
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
 	{ "><>",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
+ 	{ "[@]",      spiral },
+ 	{ "[\\]",      dwindle },
 };
 
 /* key definitions */
@@ -68,13 +72,13 @@ static Key keys[] = {
 	{ MODKEY,                       XK_j,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_l,      shiftview,      {.i = +1 } },
 	{ MODKEY,                       XK_h,      shiftview,      {.i = -1 } },
-	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
-	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_comma,  focusmon,       {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_period, focusmon,       {.i = +1 } },
 
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY|ShiftMask,             XK_d,      tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_u,      tagmon,         {.i = +1 } },
-	//TODO add a toggle between a fibbonacci layout and a monocle layout. I don't need any others
+	{ MODKEY,                       XK_f,      fullscreen,     {0} },
 
 //spawning windows
 	{ MODKEY,                       XK_space,  spawn,          {.v = dmenucmd } },
@@ -83,18 +87,20 @@ static Key keys[] = {
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 
 //other
-	{ MODKEY,                       XK_f,      togglefloating, {0} },
+	{ MODKEY|ShiftMask,             XK_f,      togglefloating, {0} },
 	{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
 
 //removed
 //	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
+//	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+//	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+//	{ MODKEY,                       NONE,      setlayout,      {.v = &layouts[3]} }, //fib, I edited dwm.c to make this default
+//	{ MODKEY,                       NONE,      setlayout,      {.v = &layouts[4]} }, //dwindle
 //	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
 //	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
 //	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 //	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 //	{ MODKEY,                       XK_Tab,    view,           {0} },
-//	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-//	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 //	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 //	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
 //	{ MODKEY|ShiftMask,             XK_Return, setlayout,      {0} },
@@ -108,7 +114,7 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_BackSpace,  quit,       {0} },
+	{ MODKEY|ShiftMask,             XK_Delete   ,  quit,       {0} },
 };
 
 /* button definitions */

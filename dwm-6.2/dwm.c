@@ -199,6 +199,7 @@ static void sendmon(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
+static void fullscreen(const Arg *arg);
 static void setlayout(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setup(void);
@@ -638,7 +639,7 @@ createmon(void)
 	m->nmaster = nmaster;
 	m->showbar = showbar;
 	m->topbar = topbar;
-	m->lt[0] = &layouts[0];
+	m->lt[0] = &layouts[3]; //create fibbonacci layouts as default
 	m->lt[1] = &layouts[1 % LENGTH(layouts)];
 	strncpy(m->ltsymbol, layouts[0].symbol, sizeof m->ltsymbol);
 	return m;
@@ -1495,6 +1496,19 @@ setfullscreen(Client *c, int fullscreen)
 		resizeclient(c, c->x, c->y, c->w, c->h);
 		arrange(c->mon);
 	}
+}
+
+Layout *last_layout;
+void
+fullscreen(const Arg *arg)
+{
+	if (selmon->showbar) {
+		for(last_layout = (Layout *)layouts; last_layout != selmon->lt[selmon->sellt]; last_layout++);
+		setlayout(&((Arg) { .v = &layouts[2] }));
+	} else {
+		setlayout(&((Arg) { .v = last_layout }));
+	}
+	togglebar(arg);
 }
 
 void
