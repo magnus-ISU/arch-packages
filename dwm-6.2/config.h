@@ -14,10 +14,18 @@ static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
 static const char col_gold[]        = "#dbb92e";
+static const unsigned int baralpha = 0xd0;
+static const unsigned int borderalpha = OPAQUE;
+
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
 	[SchemeSel]  = { col_gray1, col_gold,  col_gold  },
+};
+static const unsigned int alphas[][3]      = {
+	/*               fg      bg        border     */
+	[SchemeNorm] = { OPAQUE, baralpha, borderalpha },
+	[SchemeSel]  = { OPAQUE, baralpha, borderalpha },
 };
 
 /* tagging */
@@ -76,7 +84,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, focusmon,       {.i = +1 } },
 
-	{ MODKEY,                       XK_Return, zoom,           {0} },
+	{ MODKEY,                       XK_s,      zoom,           {0} },
 	{ MODKEY|ShiftMask,             XK_d,      tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_u,      tagmon,         {.i = +1 } },
 	{ MODKEY,                       XK_f,      fullscreen,     {0} },
