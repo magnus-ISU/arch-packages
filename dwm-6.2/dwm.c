@@ -739,8 +739,10 @@ drawbar(Monitor *m)
 	/* draw status first so it can be overdrawn by tags later */
 	/* I want my status on every monitor			  */
 //	if (m == selmon) { /* status is only drawn on selected monitor */
-		drw_setscheme(drw, scheme[SchemeNorm]);
-		sw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
+			   /* I want my status on all monitors	       */
+		if (m->sel && m==selmon)	drw_setscheme(drw, scheme[SchemeSel]); //keep the top border consistent after the tags
+		else				drw_setscheme(drw, scheme[SchemeNorm]);
+		sw = TEXTW(stext) - lrpad + 1; /* 1px right padding */
 		drw_text(drw, m->ww - sw, 0, sw, bh, 0, stext, 0);
 //	}
 
