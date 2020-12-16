@@ -61,7 +61,7 @@
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
-enum { SchemeNorm, SchemeSel }; /* color schemes */
+enum { SchemeNorm, SchemeSel, SchemeUnselMonBarNorm }; /* color schemes */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
        NetWMWindowTypeDialog, NetClientList, NetLast }; /* EWMH atoms */
@@ -736,12 +736,15 @@ drawbar(Monitor *m)
 	unsigned int i, occ = 0, urg = 0;
 	Client *c;
 
+	/* distinguish between regular scheme on selected and unselected monitor */
+	int scheme_norm = (m == selmon) ? SchemeNorm : SchemeUnselMonBarNorm; //replace with SchemeNorm
+
 	/* draw status first so it can be overdrawn by tags later */
 	/* I want my status on every monitor			  */
 //	if (m == selmon) { /* status is only drawn on selected monitor */
 			   /* I want my status on all monitors	       */
 		if (m->sel && m==selmon)	drw_setscheme(drw, scheme[SchemeSel]); //keep the top border consistent after the tags
-		else				drw_setscheme(drw, scheme[SchemeNorm]);
+		else				drw_setscheme(drw, scheme[scheme_norm]);
 		sw = TEXTW(stext) - lrpad + 1; /* 1px right padding */
 		drw_text(drw, m->ww - sw, 0, sw, bh, 0, stext, 0);
 //	}
@@ -754,7 +757,7 @@ drawbar(Monitor *m)
 	x = 0;
 	for (i = 0; i < LENGTH(tags); i++) {
 		w = TEXTW(tags[i]);
-		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
+		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : scheme_norm]);
 		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
 		if (occ & 1 << i)
 			drw_rect(drw, x + boxs, boxs, boxw, boxw,
@@ -763,17 +766,17 @@ drawbar(Monitor *m)
 		x += w;
 	}
 	w = blw = TEXTW(m->ltsymbol);
-	drw_setscheme(drw, scheme[SchemeNorm]);
+	drw_setscheme(drw, scheme[scheme_norm]);
 	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
 
 	if ((w = m->ww - sw - x) > bh) {
 		if (m->sel) {
-			drw_setscheme(drw, scheme[m == selmon ? SchemeSel : SchemeNorm]);
+			drw_setscheme(drw, scheme[m == selmon ? SchemeSel : scheme_norm]);
 			drw_text(drw, x, 0, w, bh, lrpad / 2, m->sel->name, 0);
 			if (m->sel->isfloating)
 				drw_rect(drw, x + boxs, boxs, boxw, boxw, m->sel->isfixed, 0);
 		} else {
-			drw_setscheme(drw, scheme[SchemeNorm]);
+			drw_setscheme(drw, scheme[scheme_norm]);
 			drw_rect(drw, x, 0, w, bh, 1, 1);
 		}
 	}

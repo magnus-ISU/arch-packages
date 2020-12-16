@@ -13,19 +13,23 @@ static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
+static const char col_aqua[]        = "#11c620";
 static const char col_gold[]        = "#dbb92e";
 static const unsigned int baralpha = 0xd0;
+static const unsigned int unfocusedbaralpha = 0x80;
 static const unsigned int borderalpha = OPAQUE;
 
 static const char *colors[][3]      = {
-	/*               fg         bg         border   */
-	[SchemeNorm] = { col_gold, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray1, col_gold,  col_gold  },
+	/*                               fg         bg        border   */
+	[SchemeNorm]	         = { col_gold,  col_gray1,  col_gray2 },
+	[SchemeSel]	         = { col_gray1, col_gold,   col_gray2  },
+	[SchemeUnselMonBarNorm]    = { col_aqua,  col_gray1,  col_gray2  },
 };
 static const unsigned int alphas[][3]      = {
 	/*               fg      bg        border     */
 	[SchemeNorm] = { OPAQUE, baralpha, borderalpha },
 	[SchemeSel]  = { OPAQUE, baralpha, borderalpha },
+	[SchemeUnselMonBarNorm]  = { OPAQUE, unfocusedbaralpha, borderalpha },
 };
 
 /* tagging */
@@ -49,8 +53,8 @@ static const int resizehints = 1;    /* 1 means respect size hints in tiled resi
 #include "fibonacci.c"
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[]=",      tile },    /* first entry is default */
-	{ "><>",      NULL },    /* no layout function means floating behavior */
+	{ "[]H",      tile },    /* first entry is default */
+	{ "FLO",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
  	{ "[@]",      spiral },
  	{ "[\\]",      dwindle },
@@ -79,21 +83,25 @@ static Key keys[] = {
 //navigation
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_j,      incnmaster,     {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_k,      incnmaster,     {.i = -1 } },
+
 	{ MODKEY,                       XK_l,      shiftview,      {.i = +1 } },
 	{ MODKEY,                       XK_h,      shiftview,      {.i = -1 } },
+
 	{ MODKEY|ShiftMask,             XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, focusmon,       {.i = +1 } },
-
-	{ MODKEY,                       XK_s,      zoom,           {0} },
 	{ MODKEY|ShiftMask,             XK_d,      tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_u,      tagmon,         {.i = +1 } },
+
+	{ MODKEY,                       XK_s,      zoom,           {0} },
 	{ MODKEY,                       XK_f,      fullscreen,     {0} },
 
 //spawning windows
 	{ MODKEY,                       XK_space,  spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_t,      spawn,          {.v = termcmd } },
 
-	{ MODKEY,                       XK_q,      killclient,     {0} },
+	{ MODKEY,                       XK_x,      killclient,     {0} },
 
 //other
 	{ MODKEY|ShiftMask,             XK_f,      togglefloating, {0} },
@@ -105,8 +113,6 @@ static Key keys[] = {
 //	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 //	{ MODKEY,                       NONE,      setlayout,      {.v = &layouts[3]} }, //fib, I edited dwm.c to make this default
 //	{ MODKEY,                       NONE,      setlayout,      {.v = &layouts[4]} }, //dwindle
-//	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-//	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
 //	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 //	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 //	{ MODKEY,                       XK_Tab,    view,           {0} },
