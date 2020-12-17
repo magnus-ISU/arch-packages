@@ -19,7 +19,13 @@
 #done
 
 
-while true; do dwm 2> ~/.dwm.log; done &
+while true; do
+	dwm 2>>~/.log/dwm/dwmerr
+#	dwm 2>"~/.log/dwm/dwmerr-$(date +%y-%m-%d-%H-%M-%S)"
+#	dwm > "~/.log/dwm/dwmout-$(date +%y-%m-%d-%H:%M:%S)" 2> "~/.log/dwm/dwmerr-$(date +%y-%m-%d-%H:%M:%S)"
+#	mv ~/.log/dwm/dwmerr1 ~/.log/dwmerr
+#	mv ~/.log/dwm/dwmout1 ~/.log/dwmout
+done &
 
 #set a random background - may want something more sophisticated later
 xwallpaper --zoom $(find ~/media/wallpapers/ -type f | shuf | head -n 1)
