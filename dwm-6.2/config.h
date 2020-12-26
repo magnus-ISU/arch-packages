@@ -73,9 +73,11 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "st", NULL };
-static const char *browsercmd[] = { "waterfox-g3", 0 };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gold, "-sb", col_cyan, "-sf", col_gray4, NULL };
+
+static const char *termcmd[]		= { "st", 0 };
+static const char *browsercmd[] 	= { "waterfox-g3", 0 };
+static const char *passwordcmd[] 	= { "passmenu", 0 };
 
 #include "shiftview.c"
 static Key keys[] = {
@@ -102,6 +104,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_space,  spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_t,      spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      spawn,          {.v = browsercmd } },
+	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = passwordcmd } },
 
 	{ MODKEY,                       XK_x,      killclient,     {0} },
 
