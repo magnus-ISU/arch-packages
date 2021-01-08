@@ -1073,13 +1073,11 @@ tswapscreen(void)
 	tfulldirt();
 }
 
-void
-kscrolldown(const Arg* a)
-{
+void kscrolldown(const Arg* a) {
 	int n = a->i;
 
-	if (n < 0)
-		n = term.row + n;
+	if (n==-2) n = term.row / 2 + 1;
+	else if (n < 0) n += term.row;
 
 	if (n > term.scr)
 		n = term.scr;
@@ -1091,13 +1089,11 @@ kscrolldown(const Arg* a)
 	}
 }
 
-void
-kscrollup(const Arg* a)
-{
+void kscrollup(const Arg* a) {
 	int n = a->i;
 
-	if (n < 0)
-		n = term.row + n;
+	if (n==-2) n = term.row / 2 + 1;
+	else if (n < 0) n += term.row;
 
 	if (term.scr <= HISTSIZE-n) {
 		term.scr += n;
