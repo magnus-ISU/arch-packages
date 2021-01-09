@@ -7,29 +7,29 @@ case $action in
 	program_to_install=$(pacman -Si | awk '/^Name/{name=$3} /^Installed Size/{is=$4$5} /^Description/{sub(/^.{18}/,"",$0);{desc=$0};printf("%-18s [%-9s] -> %s\n", name, is, desc)}' | dmenu -i -l 25 | awk '{print $1}')
 	if [ ! -z "$program_to_install" ]; then
 		sudo -A pacman -S --noconfirm "$program_to_install"
-		dunstify "Tradwife" "Hark! $program_to_install arrives anon!"
+		dunstify "Tradwife Pacman" "Hark! $program_to_install arrives anon!"
 	fi
 	;;
 "Remove Program")
 	program_to_remove=$(pacman -Qei | awk '/^Name/{name=$3} /^Installed Size/{is=$4$5} /^Description/{sub(/^.{18}/,"",$0);{desc=$0};printf("%-18s [%-9s] -> %s\n", name, is, desc)}' | dmenu -i -l 25 | awk '{print $1}')
 	if [ ! -z "$program_to_remove" ]; then
 		sudo -A pacman -R --noconfirm "$program_to_remove"
-		dunstify "Tradwife" "Let us mourn $program_to_remove, slain in his youth"
+		dunstify "Tradwife Pacman" "Let us mourn $program_to_remove, slain in his youth"
 	fi
 	;;
 "Remove Dependency")
 	program_to_remove=$(pacman -Qi | awk '/^Name/{name=$3} /^Installed Size/{is=$4$5} /^Description/{sub(/^.{18}/,"",$0);{desc=$0};printf("%-18s [%-9s] -> %s\n", name, is, desc)}' | dmenu -i -l 25 | awk '{print $1}')
 	if [ ! -z "$program_to_remove" ]; then
 		sudo -A pacman -R --noconfirm "$program_to_remove"
-		dunstify "Tradwife" "Friendship ended with $program_to_remove"
+		dunstify "Tradwife Pacman" "Friendship ended with $program_to_remove"
 	fi
 	;;
 "Update Programs")
-	sudo -A pacman -Syu --noconfirm || dunstify --urgency=critical "Tradwife" "My mind... unravels"
-	dunstify "Tradwife" "A new era of Knowledge"
+	sudo -A pacman -Syu --noconfirm > ~/packages/ms_pacman/update.log || dunstify --urgency=critical "Tradwife Pacman" "My mind... unravels"
+	dunstify "Tradwife Pacman" "A new era of Knowledge"
 	;;
 "Autoremove")
 	sudo -A pacman -Rs $(pacman -Qqtd)
-	dunstify "Tradwife" "Cruft Eviscerated"
+	dunstify "Tradwife Pacman" "Cruft Eviscerated"
 	;;
 esac
