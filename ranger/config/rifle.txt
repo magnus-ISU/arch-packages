@@ -1,0 +1,42 @@
+# Edit empty files
+mime ^inode/x-empty		= $EDITOR -- $@
+
+# Other files we want to edit in vim
+mime ^text,	label editor	= $EDITOR -- "$@"
+mime ^text,	label pager	= $PAGER -- "$@"
+		label editor, ext xml|json|csv|tex|py|pl|rb|rs|js|sh|php = $EDITOR -- "$@"
+		label pager,  ext xml|json|csv|tex|py|pl|rb|rs|js|sh|php = $PAGER -- "$@"
+
+# Apparently this is a man page? idk
+ext 1                         = man "$1"
+
+# Useful programming constructs
+name ^[mM]akefile$            = make
+ext sh  = sh -- "$1"
+ext py  = python3 -- "$1"
+ext pl  = perl -- "$1"
+ext rb  = ruby -- "$1"
+ext js  = node -- "$1"
+ext php = php -- "$1"
+
+# Zathura - books and shit
+ext pdf|djvu|epub|cbr|cbz,	X, flag f = zathura --mode=fullscreen -- "$@"
+#ext djvu,	X, flag f = zathura -- "$@"
+#ext epub,	X, flag f = zathura -- "$@"
+#ext cbr,	X, flag f = zathura -- "$@"
+#ext cbz,	X, flag f = zathura -- "$@"
+
+# Image data
+mime ^image,      X, flag f = sxiv -- "$@"
+
+# Audio data
+mime ^audio|ogg$, has ffplay      = ffplay -loop 0 -nodisp -- "$@" 2>/dev/null &
+
+# Video data
+mime ^video,	X = ffplay -fs -autoexit "$@"
+
+# Not sure what this is for
+mime ^ranger/x-terminal-emulator, has st = st -e "$@"
+
+# If we still don't know what to do, ask the user
+!mime ^text	= ask
