@@ -1,7 +1,6 @@
 *.o
 *.diff
 lazylynx
-ranger
 sxiv
 signal-cli
 cppmatrix
