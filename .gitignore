@@ -1,6 +1,5 @@
 *.o
 *.diff
 sxiv
-signal-cli
 cppmatrix
 speedtest
