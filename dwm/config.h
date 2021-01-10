@@ -79,7 +79,7 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 static const char *termcmd[]		= { "st", 0 };
 static const char *browsercmd[] 	= { "waterfox-g3", 0 };
 static const char *passwordcmd[] 	= { "passmenu", 0 };
-static const char *packagecmd[]		= { "/home/mag/packages/ms_pacman/ms_pacman", 0 };
+static const char *packagecmd[]		= { "/home/mag/packages/util/ms_pacman", 0 };
 
 #include "shiftview.c"
 static Key keys[] = {

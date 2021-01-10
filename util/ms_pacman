@@ -25,7 +25,7 @@ case $action in
 	fi
 	;;
 "Update Programs")
-	sudo -A pacman -Syu --noconfirm > ~/packages/ms_pacman/update.log || dunstify --urgency=critical "Tradwife Pacman" "My mind... unravels"
+	sudo -A pacman -Syu --noconfirm > "$XDG_TRASH_HOME/update.log" || dunstify --urgency=critical "Tradwife Pacman" "My mind... unravels"
 	dunstify "Tradwife Pacman" "A new era of Knowledge"
 	;;
 "Autoremove")
