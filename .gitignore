@@ -1,6 +1,6 @@
 *.o
 *.diff
-lazylynx
 sxiv
 signal-cli
 cppmatrix
+speedtest
