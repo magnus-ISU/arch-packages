@@ -80,6 +80,8 @@ static const char *termcmd[]		= { "st", 0 };
 static const char *browsercmd[] 	= { "waterfox-g3", 0 };
 static const char *passwordcmd[] 	= { "passmenu", 0 };
 static const char *packagecmd[]		= { "/home/mag/packages/util/ms_pacman", 0 };
+static const char *historycmd[]		= { "/home/mag/packages/util/dmenu_history", 0 };
+static const char *womancmd[]		= { "/home/mag/packages/util/woman", 0 };
 
 #include "shiftview.c"
 static Key keys[] = {
@@ -93,6 +95,8 @@ static Key keys[] = {
 
 	{ MODKEY,                       XK_l,      shiftview,      {.i = +1 } },
 	{ MODKEY,                       XK_h,      shiftview,      {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_h,      setmfact,       {.f = -0.05} },
+	{ MODKEY|ShiftMask,             XK_l,      setmfact,       {.f = +0.05} },
 
 	{ MODKEY|ShiftMask,             XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, focusmon,       {.i = +1 } },
@@ -106,8 +110,11 @@ static Key keys[] = {
 	{ MODKEY,                       XK_space,  spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_t,      spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      spawn,          {.v = browsercmd } },
+
 	{ MODKEY,                       XK_p,      spawn,          {.v = packagecmd } },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = passwordcmd } },
+	{ MODKEY|ShiftMask,             XK_r,      spawn,          {.v = historycmd } },
+	{ MODKEY,                       XK_m,      spawn,          {.v = womancmd } },
 
 	{ MODKEY,                       XK_x,      killclient,     {0} },
 
