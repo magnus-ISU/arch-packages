@@ -77,7 +77,7 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gold, "-sb", col_cyan, "-sf", col_gray4, NULL };
 
 static const char *termcmd[]		= { "st", 0 };
-static const char *browsercmd[] 	= { "waterfox-g3", "--MOZ_LOG_FILE=/tmp/mag/trash/waterfox.log", 0 };
+static const char *browsercmd[] 	= { "waterfox", "--MOZ_LOG_FILE=/tmp/mag/trash/misc/waterfox.log", 0 };
 static const char *passwordcmd[] 	= { "passmenu", 0 };
 static const char *packagecmd[]		= { "/home/mag/packages/util/ms_pacman", 0 };
 static const char *historycmd[]		= { "/home/mag/packages/util/dmenu_history", 0 };
