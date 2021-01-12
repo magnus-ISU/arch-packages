@@ -39,7 +39,7 @@ map E chain draw_possible_programs; console open_with%space
 map f  console find%space
 
 #map ;  console
-#map !  console shell%space
+map !  console shell%space
 
 map <C-p> chain console; eval fm.ui.console.history_move(-1)
 
@@ -108,7 +108,8 @@ map yp yank path
 map yd yank dir
 map yn yank name
 map y. yank name_without_extension
-map dU shell -p du --max-depth=1 -h --apparent-size 2>/dev/null | sort -rh
+#map du shell -p du -hd 1 --exclude=/proc* . 2>/dev/null | sort -rh
+map du shell -p mydu .
 
 # Filesystem Operations
 map =  chmod

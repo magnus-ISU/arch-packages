@@ -26,14 +26,15 @@ ext pdf|djvu|epub|cbr|cbz,	X, flag f = zathura --mode=fullscreen -- "$@"
 #ext cbr,	X, flag f = zathura -- "$@"
 #ext cbz,	X, flag f = zathura -- "$@"
 
+# Video data
+ext ass,	X	= mpv --fs --sub-file="$@" "$(basename $@ .enUS.ass).mp4"
+mime ^video,	X	= mpv --fs "$@"
+
 # Image data
 mime ^image,      X, flag f = sxiv -- "$@"
 
 # Audio data
 mime ^audio|ogg$, has ffplay      = ffplay -loop 0 -nodisp -- "$@" 2>/dev/null &
-
-# Video data
-mime ^video,	X = ffplay -fs -autoexit "$@"
 
 # Not sure what this is for
 mime ^ranger/x-terminal-emulator, has st = st -e "$@"
