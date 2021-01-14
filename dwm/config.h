@@ -79,9 +79,9 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 static const char *termcmd[]		= { "st", 0 };
 static const char *browsercmd[] 	= { "waterfox", "--MOZ_LOG_FILE=/tmp/mag/trash/misc/waterfox.log", 0 };
 static const char *passwordcmd[] 	= { "passmenu", 0 };
-static const char *packagecmd[]		= { "/home/mag/packages/util/ms_pacman", 0 };
-static const char *historycmd[]		= { "/home/mag/packages/util/dmenu_history", 0 };
-static const char *womancmd[]		= { "/home/mag/packages/util/woman", 0 };
+static const char *packagecmd[]		= { "/home/mag/p/util/ms_pacman", 0 };
+static const char *historycmd[]		= { "/home/mag/p/util/dmenu_history", 0 };
+static const char *womancmd[]		= { "/home/mag/p/util/woman", 0 };
 
 #include "shiftview.c"
 static Key keys[] = {

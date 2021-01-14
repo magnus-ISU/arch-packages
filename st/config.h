@@ -5,7 +5,10 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Liberation Mono:pixelsize=13:antialias=true:autohint=true";
+static char *font = "JetBrains Mono,JetBrains Mono ExtraBold style=ExtraBold,Regular";
+//static char *font = "JetBrains Mono NL Thin:style=Thin,Regular";
+//static char *font = "JetBrains Mono,JetBrains Mono ExtraBold:style=ExtraBold,Regular";
+//static char *font = "JetBrains Mono NL,JetBrains Mono NL ExtraBold:style=ExtraBold,Regular";
 static int borderpx = 2;
 
 /*
