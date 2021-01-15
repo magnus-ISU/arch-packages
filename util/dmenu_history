@@ -1,2 +1,2 @@
 #!/bin/sh
-echo -n $(sort ~/.cache/bash/history | uniq | dmenu -l 25) | xclip -selection clipboard
+echo -n $(sort $HISTFILE | uniq | dmenu -i -l 25) | xclip -selection clipboard

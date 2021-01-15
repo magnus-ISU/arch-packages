@@ -2,6 +2,6 @@
 
 #manpage=`find /usr/share/man /usr/local/man/ -type f | sed 's/.gz//; s|.*/||' | awk -F. '{A=$NF; printf("%s %s\n", A, $0) }' | sed 's/\.[^\.]*$//' | sort | dmenu -l 25 # Number before
 #manpage=`find /usr/share/man /usr/local/man/ -type f | sed 's/.gz//; s|.*/||' | awk -F. '{A=$NF; printf("%s %s\n", $0, A) }' | sed 's/\.[^\.]* / /' | sort | dmenu -l 25 | awk '{printf("%s %s", $2, $1)}'` # Number after, but long
-manpage=`find /usr/share/man /usr/local/man/ -type f | sed 's/.gz//; s|.*/||; s/\(.*\)\./\1 /' | sort | dmenu -l 25 | awk '{printf("%s %s", $2, $1)}'` #Number after, shorter
+manpage=`find /usr/share/man /usr/local/man/ -type f | sed 's/.gz//; s|.*/||; s/\(.*\)\./\1 /' | sort | dmenu -i -l 25 | awk '{printf("%s %s", $2, $1)}'` #Number after, shorter
 if [ -z "$manpage" ]; then exit 1; fi
 man -t $manpage | ps2pdf - | zathura - --mode=fullscreen
