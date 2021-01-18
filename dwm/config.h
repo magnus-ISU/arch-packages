@@ -6,8 +6,7 @@ static const unsigned int gappx     = 2;        /* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=12" };
-static const char dmenufont[]       = "monospace:size=11";
+static const char *fonts[]          = { "JetBrains Mono:size=10" };
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -74,7 +73,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gold, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-nb", col_gray1, "-nf", col_gold, "-sb", col_cyan, "-sf", col_gray4, NULL };
 
 static const char *termcmd[]		= { "st", 0 };
 static const char *browsercmd[] 	= { "waterfox", "--MOZ_LOG_FILE=/tmp/mag/trash/misc/waterfox.log", 0 };
@@ -82,6 +81,7 @@ static const char *passwordcmd[] 	= { "passmenu", 0 };
 static const char *packagecmd[]		= { "/home/mag/p/util/ms_pacman", 0 };
 static const char *historycmd[]		= { "/home/mag/p/util/dmenu_history", 0 };
 static const char *womancmd[]		= { "/home/mag/p/util/woman", 0 };
+static const char *emojicmd[]		= { "/home/mag/p/emoji/emoji", 0 };
 
 #include "shiftview.c"
 static Key keys[] = {
@@ -115,6 +115,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = passwordcmd } },
 	{ MODKEY|ShiftMask,             XK_r,      spawn,          {.v = historycmd } },
 	{ MODKEY,                       XK_m,      spawn,          {.v = womancmd } },
+	{ MODKEY,                       XK_e,      spawn,          {.v = emojicmd } },
 
 	{ MODKEY,                       XK_x,      killclient,     {0} },
 

@@ -1,7 +1,7 @@
 *.o
 *.diff
-sxiv
-cppmatrix
-speedtest
-surf
-waterfox
+sxiv/
+cppmatrix/
+surf/
+waterfox/
+blender/
