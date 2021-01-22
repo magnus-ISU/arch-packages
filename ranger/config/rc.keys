@@ -133,7 +133,7 @@ map p'<any> paste dest=%any_path
 
 #map dD console delete
 #map dT console trash
-map D shell mv -f %s ~/.cache/.rm &
+map D shell mv -f %s /tmp/mag/trash/ranger &
 #map D shell mv -f %s ~/.cache/.rm
 
 map dd cut

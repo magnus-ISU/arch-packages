@@ -7,10 +7,9 @@
  */
 static char *font = "JetBrains Mono,JetBrains Mono ExtraBold style=ExtraBold,Regular";
 static char *font2[] = {
-/*	"Inconsolata for Powerline:pixelsize=12:antialias=true:autohint=true", */
-/*	"Hack Nerd Font Mono:pixelsize=11:antialias=true:autohint=true", */
 	"Noto Color Emoji:style=Regular",
 	"HanaMinA,花園明朝A:style=Regular",
+	"Sazanami Mincho,さざなみ明朝:style=Mincho-Regular,Regular",
 };
 static int borderpx = 2;
 
