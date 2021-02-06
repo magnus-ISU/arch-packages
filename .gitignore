@@ -2,8 +2,5 @@
 *.diff
 *.tar*
 
-sxiv/
-cppmatrix/
-surf/
-waterfox/
-blender/
+malware/
+apps/
