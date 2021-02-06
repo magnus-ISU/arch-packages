@@ -1,6 +1,6 @@
 #!/bin/sh
 
-action=$(echo "Install Program\nRemove Program\nUpdate Programs\nAutoremove\nRemove Dependency" | dmenu -i -p "Tradwife Pacman")
+action=$(echo "Install Program\nRemove Program\nUpdate Programs\nAutoremove\nRemove Dependency\nClear Pacman Cache\nRemove System Journal" | dmenu -i -p "Tradwife Pacman")
 
 case $action in
 "Install Program")
@@ -31,5 +31,16 @@ case $action in
 "Autoremove")
 	sudo -A pacman --noconfirm -Rs $(pacman -Qqtd) > "$XDG_TRASH_HOME/misc/remove.log"
 	dunstify "Tradwife Pacman" "Cruft Eviscerated"
+	;;
+"Clear Pacman Cache")
+	sudo -A pacman -Scc --noconfirm
+	dunstify "Tradwife Pacman" "Removed da Cache, boss"
+	;;
+"Remove System Journal")
+	sudo -A journalctl --vacuum-size=1M
+	dunstify "Tradwife Pacman" "The archives must be incomplete"
+	;;
+*)
+	dunstify "Tradwife Pacman" "Unknown option"
 	;;
 esac
