@@ -15,7 +15,7 @@ static const char col_cyan[]        = "#005577";
 static const char col_aqua[]        = "#11c620";
 static const char col_gold[]        = "#dbb92e";
 static const unsigned int baralpha = 0xd0;
-static const unsigned int unfocusedbaralpha = 0x80;
+static const unsigned int unfocusedbaralpha = 0x00;
 static const unsigned int borderalpha = OPAQUE;
 
 static const char *colors[][3]      = {
