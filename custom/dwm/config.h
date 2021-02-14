@@ -78,13 +78,14 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-nb", col_gray1, "-nf", col_gold, "-sb", col_cyan, "-sf", col_gray4, NULL };
 
-static const char *termcmd[]		= { "st", 0 };
-static const char *browsercmd[] 	= { "librewolf", 0 };
-static const char *passwordcmd[] 	= { "passmenu", 0 };
-static const char *packagecmd[]		= { "/home/mag/p/util/ms_pacman", 0 };
-static const char *historycmd[]		= { "/home/mag/p/util/dmenu_history", 0 };
-static const char *womancmd[]		= { "/home/mag/p/util/woman", 0 };
-static const char *emojicmd[]		= { "/home/mag/p/util/emoji/emoji", 0 };
+static const char *termcmd[]    	= { "st", 0 };
+static const char *browsercmd[] 	= { "qutebrowser", 0 };
+static const char *passwordcmd[]	= { "passmenu", 0 };
+static const char *discordcmd[] 	= { "ripcord", 0 };
+static const char *packagecmd[] 	= { "/home/mag/p/util/ms_pacman", 0 };
+static const char *historycmd[] 	= { "/home/mag/p/util/dmenu_history", 0 };
+static const char *womancmd[]   	= { "/home/mag/p/util/woman", 0 };
+static const char *emojicmd[]   	= { "/home/mag/p/util/emoji/emoji", 0 };
 
 #include "shiftview.c"
 static Key keys[] = {
@@ -113,6 +114,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_space,  spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_t,      spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      spawn,          {.v = browsercmd } },
+	{ MODKEY,                       XK_d,      spawn,          {.v = discordcmd } },
 
 	{ MODKEY,                       XK_p,      spawn,          {.v = packagecmd } },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = passwordcmd } },
