@@ -14,9 +14,10 @@ class dungeon {
 	island_tile *legal_tiles;
 
 	std::vector<struct room> *rooms;
-	std::queue<struct room> *guesses;
+	std::queue<struct room> *queue;
 
 	struct room make_room(int x, int y);
+	void enqueue_neighbours(struct room r);
 public:
 	dungeon(int minsize, int maxsize, int minspace, int maxspace, island_tile *legal_tiles);
 	~dungeon();
