@@ -3,8 +3,8 @@ Then create another program which reads the big 5 scores and creates a groff doc
 
 DONE:
 Create a google sheets file with the questionaire
-TODO:
 Create a parser which reads a format file and outputs values based on calculations on a file which has similar structure to the format
+TODO:
 Create a format file based on the questionaire which the parser can use to create a person's values for the big 5
 Create a program or script which reads the big 5 scores and gives the standard deviations from the mean
 Create a program or script which takes the previous data and creates a groff document which has personalised information about each students results
