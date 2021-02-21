@@ -12,6 +12,7 @@ enum island_tile : byte {
 	T_GEN_FLOOR,
 	T_GEN_WALL,
 	T_GEN_FLOAT,
+	T_GEN_DUNG,
 
 	T_CAVE_FLOOR,
 	T_TILE_FLOOR,

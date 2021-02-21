@@ -32,7 +32,8 @@ int island::h() {
 #define BIG_SCALE 96
 #define LIL_SCALE 16
 #define FAR_PENALTY 3
-#define NUM_DUNGEONS 150
+//TODO instead of having a NUM_DUNGEONS have a dungeon density and check regular points on a grid for building a dungeon
+#define NUM_DUNGEONS 1000
 void island::generate_map() {
 	//information about what we generated
 	int furthest[4] = {0, 0, this->width, this->height};
@@ -40,8 +41,8 @@ void island::generate_map() {
 	//calculate perlin noise at every point and make an island-blob from it
 	int top_x = this->width / 2;
 	int top_y = this->height / 2;
-	perlin major(randint(1024));
-	perlin minor(randint(1024));
+	perlin major(randint(1 << 16));
+	perlin minor(randint(1 << 16));
 	for (int x = 0; x < this->width; x++) {
 		for (int y = 0; y < this->height; y++) {
 			double major_noise = major.noise((double) x / BIG_SCALE, (double) y / BIG_SCALE, 0.5);
@@ -85,13 +86,15 @@ void island::generate_map() {
 			case T_GEN_WALL:
 				num_wall++;
 				break;
+			default:
+				break;
 			}
 		}
 	}
 	int floors_tried = 0, walls_tried = 0;
 	int floors_placed = 0, walls_placed = 0;
-	dungeon wall_dungeon(6, 12, 2, 5, get_tile_list(1, T_GEN_WALL));
-	dungeon floor_dungeon(5, 12, 4, 7, get_tile_list(1, T_GEN_FLOOR));
+	dungeon wall_dungeon(8, 14, 1, 4, get_tile_list(1, T_GEN_WALL));
+	dungeon floor_dungeon(4, 9, 3, 7, get_tile_list(1, T_GEN_FLOOR));
 	dungeon *generator;
 	//loop through each floor and wall and, if they are lucky, try to generate a dungeon at them
 	for (int x = 0; x < this->width; x++) {
@@ -105,6 +108,8 @@ void island::generate_map() {
 			case T_GEN_WALL:
 				if (randint(num_wall - (walls_tried--)) < (NUM_DUNGEONS - walls_placed))
 					generator = &wall_dungeon;
+				break;
+			default:
 				break;
 			}
 			if (generator) {
@@ -134,27 +139,44 @@ island_tile island::perlin_to_tile(double perlinvalue) {
 }
 
 bool island::border_clear(island_tile *legal_list, int x, int y, int w, int h) {
+	bool found;
 	for (int i = x; i < x+w; i++) {
+		found = 0;
 		for (int j = 0; legal_list[j]; j++) {
-			if ((*this)(i, y) == legal_list[j]) break;
-			return false;
+			if ((*this)(i, y) == legal_list[j]) {
+				found = 1;
+				break;
+			}
 		}
+		if (!found) return 0;
+		found = 0;
 		for (int j = 0; legal_list[j]; j++) {
-			if ((*this)(i, y+w) == legal_list[j]) break;
-			return false;
+			if ((*this)(i, y+w) == legal_list[j]) {
+				found = 1;
+				break;
+			}
 		}
+		if (!found) return 0;
 	}
 	for (int i = y; i < y+h; i++) {
+		found = 0;
 		for (int j = 0; legal_list[j]; j++) {
-			if ((*this)(x, i) == legal_list[j]) break;
-			return false;
+			if ((*this)(x, i) == legal_list[j]) {
+				found = 1;
+				break;
+			}
 		}
+		if (!found) return 0;
+		found = 0;
 		for (int j = 0; legal_list[j]; j++) {
-			if ((*this)(x+w, i) == legal_list[j]) break;
-			return false;
+			if ((*this)(x+w, i) == legal_list[j]) {
+				found = 1;
+				break;
+			}
 		}
+		if (!found) return 0;
 	}
-	return true;
+	return 1;
 }
 
 char island_tile_pretty(island_tile t) {
@@ -163,6 +185,7 @@ char island_tile_pretty(island_tile t) {
 	case T_GEN_FLOOR: return '|';
 	case T_GEN_WALL: return '#';
 	case T_GEN_FLOAT: return '-';
+	case T_GEN_DUNG: return '.';
 	default:
 		fprintf(stderr, "Got a %d tile\n", (int) t);
 		throw t;

@@ -5,19 +5,20 @@
 
 class island;
 
-struct room { int x; int y; int w; int h; };
-
 //idea: you make a dungeon object based on some config file, then call its methods several times to generate several dungeons
 class dungeon {
 	int minsize, maxsize;
 	int minspace, maxspace;
 	island_tile *legal_tiles;
 
-	std::vector<struct room> *rooms;
-	std::queue<struct room> *queue;
+	std::vector<struct box> *rooms;
+	std::queue<struct box> *queue;
 
-	struct room make_room(int x, int y);
-	void enqueue_neighbours(struct room r);
+	struct box make_room(int x, int y);
+	void enqueue_neighbours(struct box r);
+
+	void bbox_add(struct box &bbox, struct box to_add);
+	bool location_clear(struct box r);
 public:
 	dungeon(int minsize, int maxsize, int minspace, int maxspace, island_tile *legal_tiles);
 	~dungeon();

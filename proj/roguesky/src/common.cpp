@@ -31,3 +31,21 @@ int randint(int lower_inclusive, int upper_inclusive) {
 double distance_squared(double ax, double ay, double bx, double by) {
 	return (ax - bx) * (ax - bx) + (ay - by) * (ay - by);
 }
+
+bool box_overlap(struct box a, struct box b) {
+	if (a.x < b.x) {
+		if (a.x + a.w <= b.x)
+			return false;
+	} else {
+		if (b.x + b.w <= a.x)
+			return false;
+	}
+	if (a.y < b.y) {
+		if (a.y + a.h <= b.y)
+			return false;
+	} else {
+		if (b.y + b.h <= a.y)
+			return false;
+	}
+	return true;
+}

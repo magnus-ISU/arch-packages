@@ -28,5 +28,11 @@ int randint(int upper_exclusive);
 int randint(int lower_inclusive, int upper_inclusive);
 double distance_squared(double ax, double ay, double bx, double by);
 
+struct box {
+	int x, y;
+	int w, h;
+};
+bool box_overlap(struct box a, struct box b);
+
 enum island_tile : byte;
 #endif
