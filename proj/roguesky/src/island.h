@@ -25,6 +25,7 @@ enum island_tile : byte {
 	T_WALL_CAVE,
 	T_WALL_WOOD,
 	T_WALL_BRICK,
+	T_WALL_TILE,
 
 	T_WALL_SKYSTONE,
 };

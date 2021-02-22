@@ -16,10 +16,13 @@ pathfinder::~pathfinder() {
 }
 
 //find from end to start so that way the path is easiest to add
-path *pathfinder::drunk(point start, point end, path_type ptype, int intoxication) {
+path *pathfinder::drunk(point start, point end, int (*tilechecker)(island_tile), int intoxication) {
 	//special case to avoid clearing the heap and visited
 	if (start == end)
 		return new path();
+	//default pathfinding - avoid all walls, accept all floors equally
+	if (!tilechecker)
+		tilechecker = default_pathfinding_tilechecker;
 	clearpq(*(this->heap));
 	this->visited->clear();
 	this->steps->set(end, end);
@@ -32,10 +35,10 @@ path *pathfinder::drunk(point start, point end, path_type ptype, int intoxicatio
 		if (next.p == start)
 			goto found;
 		//add the four surrounding points to the heap, steps and visited if not already visited
-		this->consider(point(next.p.x - 1, next.p.y), next.p, start, ptype, intoxication);
-		this->consider(point(next.p.x + 1, next.p.y), next.p, start, ptype, intoxication);
-		this->consider(point(next.p.x, next.p.y - 1), next.p, start, ptype, intoxication);
-		this->consider(point(next.p.x, next.p.y + 1), next.p, start, ptype, intoxication);
+		this->consider(point(next.p.x - 1, next.p.y), next.p, start, tilechecker, intoxication);
+		this->consider(point(next.p.x + 1, next.p.y), next.p, start, tilechecker, intoxication);
+		this->consider(point(next.p.x, next.p.y - 1), next.p, start, tilechecker, intoxication);
+		this->consider(point(next.p.x, next.p.y + 1), next.p, start, tilechecker, intoxication);
 	}
 	//there is no cleanup because we allocate all the memory upon creating the object! yay
 	//This means that we did not find it though... not yay
@@ -53,7 +56,7 @@ found:
 }
 
 //If a legal point for the path, adds the point p to the heap for consideration
-void pathfinder::consider(point p, point wherefrom, point target, path_type ptype, int intoxication) {
+void pathfinder::consider(point p, point wherefrom, point target, int (*tilechecker)(island_tile), int intoxication) {
 	//bounds check, because we don't do that anywhere else
 	if (p.x >= this->isle->w() || p.x < 0 || p.y < 0 || p.y >= this->isle->h())
 		return; //not an error, just means that the point this is from is on the border
@@ -68,33 +71,17 @@ void pathfinder::consider(point p, point wherefrom, point target, path_type ptyp
 	island_tile spot = (*(this->isle))[p.x][p.y];
 	//this is really not a good system, probably instead of passing a ptype we should pass a function pointer which takes an island_tile and spits out -1 for illegal or a positive number to add to dist
 	//where 0 does a default behaviour which returns 0 for pathable floor tiles and -1 for all others
-	switch(ptype) {
-	case PATH_GEN_DUNG:
-		switch(spot) {
-		case T_FLOOR_CAVE:
-		case T_FLOOR_TILE:
-		case T_GEN_DUNG:
-			break;
-		case T_GEN_WALL:
-			dist += 50;
-			break;
-		case T_GEN_FLOOR:
-			dist += 200;
-			break;
-		default:
-			return;
-		}
-		break;
-	case PATH_REG:
-		break;
-	}
+	int tileval = tilechecker(spot);
+	if (-1 == tileval)
+		return;
+	dist += tileval;
 	//Since this is a valid spot, we will add it to steps and to heap
 	this->steps->set(p, wherefrom);
 	this->heap->push(pointwd(p, dist));
 }
 
-path *pathfinder::find(point start, point end, path_type ptype) {
-	return this->drunk(start, end, ptype, 1);
+path *pathfinder::find(point start, point end, int (*tilechecker)(island_tile)) {
+	return this->drunk(start, end, tilechecker, 1);
 }
 
 bool point_comp::operator () (const pointwd &lhs, const pointwd &rhs) {
@@ -153,4 +140,18 @@ bool compact_bool_matrix::get(point p) {
 }
 void compact_bool_matrix::set(point p, bool val) {
 	this->set(p.x, p.y, val);
+}
+
+int default_pathfinding_tilechecker(island_tile t) {
+	switch (t) {
+	case T_FLOOR_CAVE:
+	case T_FLOOR_TILE:
+	case T_FLOOR_WOOD:
+	case T_FLOOR_GRAV:
+	case T_FLOOR_PATH:
+	case T_FLOOR_GRASS:
+		return 0;
+	default:
+		return -1;
+	}
 }

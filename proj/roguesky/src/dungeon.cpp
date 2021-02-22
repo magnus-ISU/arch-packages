@@ -64,7 +64,7 @@ void dungeon::add_tiles(island *island) {
 		point b(bb.x + randint(bb.w), bb.y + randint(bb.h));
 
 		//generate a path between the rooms
-		path *p = island->pather->drunk(a, b, PATH_GEN_DUNG, DRUNKNESS);
+		path *p = island->pather->drunk(a, b, dungeon_tilechecker, DRUNKNESS);
 		island_tile tile;
 		for (int i = 0; i < (int) p->points.size(); i++) {
 			tile = (*island)[p->points[i].x][p->points[i].y];
@@ -154,5 +154,28 @@ void dungeon::bbox_add(box &b, box a) {
 	}
 	if (a.y + a.h > b.y + b.h) {
 		b.h = a.y + a.h - b.y;
+	}
+}
+
+int dungeon_tilechecker(island_tile t) {
+	switch(t) {
+	case T_GEN_DUNG:
+	case T_FLOOR_TILE:
+	case T_FLOOR_PATH:
+	case T_FLOOR_CAVE:
+		return 0;
+	case T_WALL_TILE:
+	case T_WALL_WOOD:
+	case T_WALL_BRICK:
+	case T_WALL_CAVE:
+		return 15;
+	case T_GEN_WALL:
+		return 50;
+	case T_GEN_FLOOR:
+		return 150;
+	case T_FLOOR_WOOD:
+		return 300;
+	default:
+		return -1;
 	}
 }

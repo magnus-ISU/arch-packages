@@ -29,4 +29,6 @@ public:
 	void add_tiles(island *island);
 };
 
+int dungeon_tilechecker(island_tile t);
+
 #endif
