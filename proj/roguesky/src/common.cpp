@@ -28,8 +28,29 @@ int randint(int lower_inclusive, int upper_inclusive) {
 	return lower_inclusive + randint(upper_inclusive + 1 - lower_inclusive);
 }
 
+int *range(int upper_exclusive) {
+	int *retval = (int*) mylloc(upper_exclusive * sizeof(*retval));
+	for (int i = 0; i < upper_exclusive; i++) {
+		retval[i] = i;
+	}
+	return retval;
+}
+
+void shuffle(int *arr, size_t len) {
+	int temp;
+	for (size_t i = 0; i < len - 1; i++) {
+		size_t j = i + randint(len - i);
+		temp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = temp;
+	}
+}
+
 double distance_squared(double ax, double ay, double bx, double by) {
 	return (ax - bx) * (ax - bx) + (ay - by) * (ay - by);
+}
+int point_distance_squared(point a, point b) {
+	return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
 }
 
 bool box_overlap(struct box a, struct box b) {
@@ -48,4 +69,15 @@ bool box_overlap(struct box a, struct box b) {
 			return false;
 	}
 	return true;
+}
+
+box::box() { }
+box::box(int x, int y, int w, int h) : x(x), y(y), w(w), h(h) { }
+
+point::point(int x, int y) : x(x), y(y) { }
+bool point::operator == (const point &p) {
+	return this->x == p.x && this->y == p.y;
+}
+bool point::operator != (const point &p) {
+	return this->x != p.x || this->y != p.y;
 }

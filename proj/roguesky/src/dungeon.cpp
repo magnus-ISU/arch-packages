@@ -12,13 +12,14 @@ dungeon::~dungeon() {
 
 bool dungeon::try_generate(island *island, int x, int y) {
 	//test the first room, don't make a stack or queue if we don't need to
-	struct box room = this->make_room(x, y);
-	struct box bbox = room;
+	box room = this->make_room(x, y);
+	box bbox = room;
 	if (island->border_clear(this->legal_tiles, room.x, room.y, room.w, room.h)) {
 		unsigned target_size = (unsigned) randint(4, 10);
-		this->rooms = new std::vector<struct box>();
+		this->rooms = new std::vector<box>();
+		this->rooms->reserve(target_size);
 		this->rooms->push_back(room);
-		this->queue = new std::queue<struct box>();
+		this->queue = new std::queue<box>();
 		//now we must generate the actual dungeon
 		enqueue_neighbours(room);
 		while (!this->queue->empty() && this->rooms->size() < target_size) {
@@ -40,10 +41,11 @@ bool dungeon::try_generate(island *island, int x, int y) {
 	return false;
 }
 
+#define DRUNKNESS 45
 void dungeon::add_tiles(island *island) {
 	//add dungeon tiles for each room
 	for (unsigned i = 0; i < this->rooms->size(); i++) {
-		struct box r = (*(this->rooms))[i];
+		box r = (*(this->rooms))[i];
 		for (int x = r.x; x < r.x + r.w; x++) {
 			for (int y = r.y; y < r.y + r.h; y++) {
 				(*island)[x][y] = T_GEN_DUNG;
@@ -51,19 +53,49 @@ void dungeon::add_tiles(island *island) {
 		}
 	}
 	//add paths between rooms
+	int *shuffled = range(this->rooms->size());
+	shuffle(shuffled, this->rooms->size());
 
+	for (int i = 0; i < (int) this->rooms->size() - 1; i++) {
+		//get a random point inside each room
+		box ba((*(this->rooms))[i]);
+		box bb((*(this->rooms))[i+1]);
+		point a(ba.x + randint(ba.w), ba.y + randint(ba.h));
+		point b(bb.x + randint(bb.w), bb.y + randint(bb.h));
+
+		//generate a path between the rooms
+		path *p = island->pather->drunk(a, b, PATH_GEN_DUNG, DRUNKNESS);
+		island_tile tile;
+		for (int i = 0; i < (int) p->points.size(); i++) {
+			tile = (*island)[p->points[i].x][p->points[i].y];
+			switch(tile) {
+			case T_GEN_WALL:
+				tile = T_FLOOR_TILE;
+				break;
+			case T_GEN_FLOOR:
+				tile = T_FLOOR_PATH;
+				break;
+			default:
+				break;
+			}
+			(*island)[p->points[i].x][p->points[i].y] = tile;
+		}
+		delete p;
+	}
+
+	free(shuffled);
 	//add a number of exits
 
 	delete this->rooms;
 }
 
-struct box dungeon::make_room(int x, int y) {
+box dungeon::make_room(int x, int y) {
 	return {x, y, randint(this->minsize, this->maxsize), randint(this->minsize, this->maxsize)};
 }
 
-void dungeon::enqueue_neighbours(struct box r) {
+void dungeon::enqueue_neighbours(box r) {
 	int seperation, new_val;
-	struct box new_room;
+	box new_room;
 	//top neighbour
 	seperation = randint(this->minspace, this->maxspace);
 	new_val = r.x + randint(r.w);
@@ -96,7 +128,7 @@ void dungeon::enqueue_neighbours(struct box r) {
 	this->queue->push(new_room);
 }
 
-bool dungeon::location_clear(struct box r) {
+bool dungeon::location_clear(box r) {
 	r.x -= this->minspace;
 	r.y -= this->minspace;
 	r.w += this->minspace * 2;
@@ -108,7 +140,7 @@ bool dungeon::location_clear(struct box r) {
 	return true;
 }
 
-void dungeon::bbox_add(struct box &b, struct box a) {
+void dungeon::bbox_add(box &b, box a) {
 	if (a.x < b.x) {
 		b.w += (b.x - a.x);
 		b.x = a.x;

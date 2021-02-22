@@ -26,13 +26,29 @@ public:
 
 int randint(int upper_exclusive);
 int randint(int lower_inclusive, int upper_inclusive);
-double distance_squared(double ax, double ay, double bx, double by);
+
+int *range(int upper_exclusive); // like in python
+void shuffle(int *arr, size_t len);
 
 struct box {
+public:
+	box();
+	box(int x, int y, int w, int h);
 	int x, y;
 	int w, h;
 };
 bool box_overlap(struct box a, struct box b);
+
+struct point {
+public:
+	int x, y;
+
+	point(int x, int y);
+	bool operator == (const point &p);
+	bool operator != (const point &p);
+};
+int point_distance_squared(point a, point b);
+double distance_squared(double ax, double ay, double bx, double by);
 
 enum island_tile : byte;
 #endif

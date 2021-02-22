@@ -1,14 +1,13 @@
 #include "island.h"
 
-island::island(int w, int h) {
-	this->width = w;
-	this->height = h;
+island::island(int w, int h) : width(w), height(h), pather(0) {
 	this->map = (island_tile *) mylloc(w * h * sizeof(*(this->map)));
 	generate_map();
 }
 
 island::~island() {
 	free(this->map);
+	delete this->pather;
 }
 
 island_tile *island::operator [] (int x) {
@@ -32,8 +31,9 @@ int island::h() {
 #define BIG_SCALE 96
 #define LIL_SCALE 16
 #define FAR_PENALTY 3
-//TODO instead of having a NUM_DUNGEONS have a dungeon density and check regular points on a grid for building a dungeon
-#define NUM_DUNGEONS 1000
+//#define NUM_DUNGEONS 1000
+#define DUNG_SPACING 2
+#define DUNG_SPACE 100
 void island::generate_map() {
 	//information about what we generated
 	int furthest[4] = {0, 0, this->width, this->height};
@@ -72,11 +72,13 @@ void island::generate_map() {
 	this->width = new_width;
 	this->height = new_height;
 	this->map = (island_tile *) myrealloc(this->map, new_width * new_height * sizeof(*(this->map)));
+	//We need to allocate the pathfinder now that the correct width and height are there
+	this->pather = new pathfinder(this);
 	//Add dungeons to the island
 	//TODO add a master dungeon which contains the exit
 
 	//first calculate the positions to place the dungeons - we need the number of floors and walls to evenly distribute them
-	int num_floor = 0, num_wall=0;
+/*	int num_floor = 0, num_wall=0;
 	for (int x = 0; x < this->width; x++) {
 		for (int y = 0; y < this->height; y++) {
 			switch ((*this)[x][y]) {
@@ -116,6 +118,41 @@ void island::generate_map() {
 				bool attempt = generator->try_generate(this, x, y);
 				if (attempt)
 					generator->add_tiles(this);
+			}
+		}
+	}
+*/
+	std::vector<dungeon*> wall_dungeons;
+	std::vector<dungeon*> floor_dungeons;
+	dungeon wall_dungeon(8, 14, 1, 4, get_tile_list(1, T_GEN_WALL));
+	wall_dungeons.push_back(&wall_dungeon);
+	dungeon floor_dungeon(4, 9, 3, 7, get_tile_list(1, T_GEN_FLOOR));
+	floor_dungeons.push_back(&floor_dungeon);
+	dungeon *generator;
+	for (int dx = 0; dx < this->width / DUNG_SPACE - 1; dx++) {
+		for (int dy = 0; dy < this->height / DUNG_SPACING - 1; dy++) {
+			for (int x = dx * DUNG_SPACE; x < dx * DUNG_SPACE + DUNG_SPACE; x += DUNG_SPACING) {
+				for (int y = dy * DUNG_SPACE; y < dy * DUNG_SPACE + DUNG_SPACE; y += DUNG_SPACING) {
+					switch((*this)[x][y]) {
+					case T_GEN_FLOOR:
+						generator = floor_dungeons[randint(floor_dungeons.size())];
+						break;
+					case T_GEN_WALL:
+						generator = wall_dungeons[randint(wall_dungeons.size())];
+						break;
+					default:
+						generator = 0;
+					}
+					if (generator) {
+						bool attempt = generator->try_generate(this, x, y);
+						if (attempt) {
+							generator->add_tiles(this);
+							//horrible, but breaks us out of the two loops
+							x += DUNG_SPACE;
+							y += DUNG_SPACE;
+						}
+					}
+				}
 			}
 		}
 	}
@@ -186,6 +223,8 @@ char island_tile_pretty(island_tile t) {
 	case T_GEN_WALL: return '#';
 	case T_GEN_FLOAT: return '-';
 	case T_GEN_DUNG: return '.';
+	case T_FLOOR_TILE: return ',';
+	case T_FLOOR_PATH: return 'p';
 	default:
 		fprintf(stderr, "Got a %d tile\n", (int) t);
 		throw t;
