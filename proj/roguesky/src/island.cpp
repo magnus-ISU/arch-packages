@@ -31,9 +31,9 @@ int island::h() {
 #define BIG_SCALE 96
 #define LIL_SCALE 16
 #define FAR_PENALTY 3
-//#define NUM_DUNGEONS 1000
-#define DUNG_SPACING 2
+#define DUNG_SPACING 4
 #define DUNG_SPACE 100
+//TODO add parameters which get rid of all the above define statements (possibly) and definitely which get rid of the hardcoded two dungeons that it uses later on.
 void island::generate_map() {
 	//information about what we generated
 	int furthest[4] = {0, 0, this->width, this->height};
@@ -74,61 +74,17 @@ void island::generate_map() {
 	this->map = (island_tile *) myrealloc(this->map, new_width * new_height * sizeof(*(this->map)));
 	//We need to allocate the pathfinder now that the correct width and height are there
 	this->pather = new pathfinder(this);
-	//Add dungeons to the island
 	//TODO add a master dungeon which contains the exit
 
-	//first calculate the positions to place the dungeons - we need the number of floors and walls to evenly distribute them
-/*	int num_floor = 0, num_wall=0;
-	for (int x = 0; x < this->width; x++) {
-		for (int y = 0; y < this->height; y++) {
-			switch ((*this)[x][y]) {
-			case T_GEN_FLOOR:
-				num_floor++;
-				break;
-			case T_GEN_WALL:
-				num_wall++;
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	int floors_tried = 0, walls_tried = 0;
-	int floors_placed = 0, walls_placed = 0;
-	dungeon wall_dungeon(8, 14, 1, 4, get_tile_list(1, T_GEN_WALL));
-	dungeon floor_dungeon(4, 9, 3, 7, get_tile_list(1, T_GEN_FLOOR));
-	dungeon *generator;
-	//loop through each floor and wall and, if they are lucky, try to generate a dungeon at them
-	for (int x = 0; x < this->width; x++) {
-		for (int y = 0; y < this->height; y++) {
-			generator = 0;
-			switch((*this)[x][y]) {
-			case T_GEN_FLOOR:
-				if (randint(num_floor - (floors_tried--)) < (NUM_DUNGEONS - floors_placed))
-					generator = &floor_dungeon;
-				break;
-			case T_GEN_WALL:
-				if (randint(num_wall - (walls_tried--)) < (NUM_DUNGEONS - walls_placed))
-					generator = &wall_dungeon;
-				break;
-			default:
-				break;
-			}
-			if (generator) {
-				bool attempt = generator->try_generate(this, x, y);
-				if (attempt)
-					generator->add_tiles(this);
-			}
-		}
-	}
-*/
+	//Add a bunch of other structures to the island
 	std::vector<dungeon*> wall_dungeons;
 	std::vector<dungeon*> floor_dungeons;
-	dungeon wall_dungeon(8, 14, 1, 4, get_tile_list(1, T_GEN_WALL));
+	dungeon wall_dungeon(8, 14, 1, 4, 10, get_tile_list(1, T_GEN_WALL));
 	wall_dungeons.push_back(&wall_dungeon);
-	dungeon floor_dungeon(4, 9, 3, 7, get_tile_list(1, T_GEN_FLOOR));
+	dungeon floor_dungeon(4, 9, 3, 7, 45, get_tile_list(1, T_GEN_FLOOR));
 	floor_dungeons.push_back(&floor_dungeon);
 	dungeon *generator;
+	//I know, quadruple nested for, but the idea is that we only want one dungeon in each DUNG_SPACE by DUNG_SPACE square
 	for (int dx = 0; dx < this->width / DUNG_SPACE - 1; dx++) {
 		for (int dy = 0; dy < this->height / DUNG_SPACING - 1; dy++) {
 			for (int x = dx * DUNG_SPACE; x < dx * DUNG_SPACE + DUNG_SPACE; x += DUNG_SPACING) {

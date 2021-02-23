@@ -3,11 +3,12 @@
 
 island_tile generation_bounding_box_checker[] = {T_AIR, T_GEN_WALL, T_GEN_FLOOR, T_GEN_FLOAT, T_ILLEGAL};
 
-dungeon::dungeon(int minsize, int maxsize, int minspace, int maxspace, island_tile *legal_tiles)
-		: minsize(minsize), maxsize(maxsize), minspace(minspace), maxspace(maxspace), legal_tiles(legal_tiles), rooms(0), queue(0) { }
+dungeon::dungeon(int minsize, int maxsize, int minspace, int maxspace, int drunken, island_tile *legal_tiles)
+		: minsize(minsize), maxsize(maxsize), minspace(minspace), maxspace(maxspace), drunken(drunken), legal_tiles(legal_tiles), rooms(0), queue(0) { }
 
 dungeon::~dungeon() {
 	free(this->legal_tiles);
+	free(this->buffer);
 }
 
 bool dungeon::try_generate(island *island, int x, int y) {
@@ -41,51 +42,27 @@ bool dungeon::try_generate(island *island, int x, int y) {
 	return false;
 }
 
-#define DRUNKNESS 45
 void dungeon::add_tiles(island *island) {
 	//add dungeon tiles for each room
 	for (unsigned i = 0; i < this->rooms->size(); i++) {
-		box r = (*(this->rooms))[i];
-		for (int x = r.x; x < r.x + r.w; x++) {
-			for (int y = r.y; y < r.y + r.h; y++) {
-				(*island)[x][y] = T_GEN_DUNG;
-			}
-		}
+		this->generate_room(island, (*this->rooms)[i]);
 	}
 	//add paths between rooms
-	int *shuffled = range(this->rooms->size());
-	shuffle(shuffled, this->rooms->size());
+	if (this->buff_len < 2 * (size_t) this->rooms->size()) {
+		free(this->buffer);
+		this->buff_len = 2 * (size_t) this->rooms->size();
+		this->buffer = (int*) mylloc(this->buff_len * sizeof(*this->buffer));
+	}
+	for (int i = 0; i < (int) this->rooms->size(); i++)
+		this->buffer[i] = i;
+	shuffle(this->buffer, this->rooms->size());
 
 	for (int i = 0; i < (int) this->rooms->size() - 1; i++) {
-		//get a random point inside each room
-		box ba((*(this->rooms))[i]);
-		box bb((*(this->rooms))[i+1]);
-		point a(ba.x + randint(ba.w), ba.y + randint(ba.h));
-		point b(bb.x + randint(bb.w), bb.y + randint(bb.h));
-
-		//generate a path between the rooms
-		path *p = island->pather->drunk(a, b, dungeon_tilechecker, DRUNKNESS);
-		island_tile tile;
-		for (int i = 0; i < (int) p->points.size(); i++) {
-			tile = (*island)[p->points[i].x][p->points[i].y];
-			switch(tile) {
-			case T_GEN_WALL:
-				tile = T_FLOOR_TILE;
-				break;
-			case T_GEN_FLOOR:
-				tile = T_FLOOR_PATH;
-				break;
-			default:
-				break;
-			}
-			(*island)[p->points[i].x][p->points[i].y] = tile;
-		}
-		delete p;
+		this->connect_rooms(island, (*this->rooms)[this->buffer[i]], (*this->rooms)[this->buffer[i+1]]);
 	}
 
-	free(shuffled);
 	//add a number of exits
-
+	//idea: For each room, choose a random point and count how far away that point is from the nearest 
 	delete this->rooms;
 }
 
@@ -178,4 +155,40 @@ int dungeon_tilechecker(island_tile t) {
 	default:
 		return -1;
 	}
+}
+
+void dungeon::generate_room(island *island, struct box r) {
+	for (int x = r.x; x < r.x + r.w; x++) {
+		for (int y = r.y; y < r.y + r.h; y++) {
+			(*island)[x][y] = T_GEN_DUNG;
+		}
+	}
+}
+
+void dungeon::connect_rooms(island *island, struct box ba, struct box bb) {
+		point a(ba.x + randint(ba.w), ba.y + randint(ba.h));
+		point b(bb.x + randint(bb.w), bb.y + randint(bb.h));
+
+		//generate a path between the rooms
+		path *p = island->pather->drunk(a, b, dungeon_tilechecker, this->drunken);
+		if (!p) {
+			//I have never seen this happen so I'm not sure what we should do, but nothing for now
+			return;
+		}
+		island_tile tile;
+		for (int i = 0; i < (int) p->points.size(); i++) {
+			tile = (*island)[p->points[i].x][p->points[i].y];
+			switch(tile) {
+			case T_GEN_WALL:
+				tile = T_FLOOR_TILE;
+				break;
+			case T_GEN_FLOOR:
+				tile = T_FLOOR_PATH;
+				break;
+			default:
+				break;
+			}
+			(*island)[p->points[i].x][p->points[i].y] = tile;
+		}
+		delete p;
 }

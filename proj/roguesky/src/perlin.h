@@ -1,5 +1,5 @@
-#ifndef LICHLIKE_PERLIN
-#define LICHLIKE_PERLIN
+#ifndef perlin_H
+#define perlin_H
 
 #include <vector>
 

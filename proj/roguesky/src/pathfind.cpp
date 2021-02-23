@@ -15,7 +15,6 @@ pathfinder::~pathfinder() {
 	delete this->visited;
 }
 
-//find from end to start so that way the path is easiest to add
 path *pathfinder::drunk(point start, point end, int (*tilechecker)(island_tile), int intoxication) {
 	//special case to avoid clearing the heap and visited
 	if (start == end)
@@ -25,6 +24,7 @@ path *pathfinder::drunk(point start, point end, int (*tilechecker)(island_tile),
 		tilechecker = default_pathfinding_tilechecker;
 	clearpq(*(this->heap));
 	this->visited->clear();
+	//find from end to start so that way the path is easiest to add
 	this->steps->set(end, end);
 	this->visited->set(end, 1);
 	pointwd next(end, point_distance_squared(start, end));

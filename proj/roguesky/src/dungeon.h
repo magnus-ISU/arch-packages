@@ -5,11 +5,16 @@
 
 class island;
 
-//idea: you make a dungeon object based on some config file, then call its methods several times to generate several dungeons
+//idea: you make a dungeon object based on some config file, then call its methods several times to generate several dungeons on an island
 class dungeon {
 	int minsize, maxsize;
 	int minspace, maxspace;
+	int drunken;
 	island_tile *legal_tiles;
+
+	//used in add_tiles, but could be easily removed
+	int *buffer = 0;
+	size_t buff_len = 0;
 
 	std::vector<struct box> *rooms;
 	std::queue<struct box> *queue;
@@ -19,8 +24,10 @@ class dungeon {
 
 	void bbox_add(struct box &bbox, struct box to_add);
 	bool location_clear(struct box r);
+	void generate_room(island *island, struct box r);
+	void connect_rooms(island *island, struct box room1, struct box room2);
 public:
-	dungeon(int minsize, int maxsize, int minspace, int maxspace, island_tile *legal_tiles);
+	dungeon(int minsize, int maxsize, int minspace, int maxspace, int drunken, island_tile *legal_tiles);
 	~dungeon();
 
 	//tries to generate a dungeon onto the island at the coordinates. Returns false if it cannot generate it.
