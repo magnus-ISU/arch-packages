@@ -1,6 +1,6 @@
 CC=g++
-CLIBS=
-CCFLAGS=-Wall -Wpedantic -Wextra -O3 -g
+CLIBS=-lraylib -lpthread
+CCFLAGS=-Wall -Wpedantic -Wextra -O0 -g
 
 CFILES:=$(wildcard src/*.cpp)
 HFILES:=$(wildcard src/*.h)
@@ -12,7 +12,7 @@ roguesky: $(OFILES)
 	$(CC) $(CCFLAGS) -o $@ $(OFILES) $(CLIBS)
 
 build/%.o: src/%.cpp $(HFILES)
-	$(CC) $(CCFLAGS) -c -o $@ $< $(CLIBS)
+	$(CC) $(CCFLAGS) -c -o $@ $<
 
 .PHONY: clean
 clean:

@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cstdarg>
 #include <cstring>
+#include <cmath>
 
 #include <exception>
 #include <string>
@@ -30,20 +31,21 @@ int randint(int lower_inclusive, int upper_inclusive);
 int *range(int upper_exclusive); // like in python
 void shuffle(int *arr, size_t len);
 
-struct box {
+class box {
 public:
 	box();
 	box(int x, int y, int w, int h);
 	int x, y;
 	int w, h;
 };
-bool box_overlap(struct box a, struct box b);
+bool box_overlap(box a, box b);
 
-struct point {
+class point {
 public:
 	int x, y;
 
 	point(int x, int y);
+	point(box b); //A random point inside the box
 	bool operator == (const point &p);
 	bool operator != (const point &p);
 };

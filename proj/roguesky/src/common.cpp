@@ -53,7 +53,7 @@ int point_distance_squared(point a, point b) {
 	return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
 }
 
-bool box_overlap(struct box a, struct box b) {
+bool box_overlap(box a, box b) {
 	if (a.x < b.x) {
 		if (a.x + a.w <= b.x)
 			return false;
@@ -75,6 +75,10 @@ box::box() { }
 box::box(int x, int y, int w, int h) : x(x), y(y), w(w), h(h) { }
 
 point::point(int x, int y) : x(x), y(y) { }
+point::point(box b) {
+	this->x = b.x + randint(b.w);
+	this->y = b.y + randint(b.h);
+}
 bool point::operator == (const point &p) {
 	return this->x == p.x && this->y == p.y;
 }

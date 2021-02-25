@@ -32,7 +32,7 @@ int island::h() {
 #define LIL_SCALE 16
 #define FAR_PENALTY 3
 #define DUNG_SPACING 4
-#define DUNG_SPACE 100
+#define DUNG_SPACE 125
 //TODO add parameters which get rid of all the above define statements (possibly) and definitely which get rid of the hardcoded two dungeons that it uses later on.
 void island::generate_map() {
 	//information about what we generated

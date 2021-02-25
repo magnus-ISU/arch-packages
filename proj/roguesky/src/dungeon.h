@@ -11,21 +11,23 @@ class dungeon {
 	int minspace, maxspace;
 	int drunken;
 	island_tile *legal_tiles;
+	box bbox;
 
 	//used in add_tiles, but could be easily removed
 	int *buffer = 0;
 	size_t buff_len = 0;
 
-	std::vector<struct box> *rooms;
-	std::queue<struct box> *queue;
+	std::vector<box> *rooms;
+	std::queue<box> *queue;
 
-	struct box make_room(int x, int y);
-	void enqueue_neighbours(struct box r);
+	box make_room(int x, int y);
+	void enqueue_neighbours(box r);
 
-	void bbox_add(struct box &bbox, struct box to_add);
-	bool location_clear(struct box r);
-	void generate_room(island *island, struct box r);
-	void connect_rooms(island *island, struct box room1, struct box room2);
+	void bbox_add(box &bbox, box to_add);
+	bool location_clear(box r);
+	void generate_room(island *island, box r);
+	void connect_rooms(island *island, box room1, box room2);
+	void generate_exit(island *island, box room);
 public:
 	dungeon(int minsize, int maxsize, int minspace, int maxspace, int drunken, island_tile *legal_tiles);
 	~dungeon();

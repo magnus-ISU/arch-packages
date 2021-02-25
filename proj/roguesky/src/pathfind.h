@@ -48,16 +48,26 @@ public:
 	void clear();
 };
 
-class point_grid {
-	int w, h;
-	point *grid;
+//isvertical * 2 + isnegative * 1 = direction
+enum direction {
+	LEFT = 1,
+	RIGHT = 0,
+	UP = 3,
+	DOWN = 2,
+};
+point dir2point(point p, direction d);
+direction dir_invert(direction d);
+
+class dir_grid {
+	compact_bool_matrix isvert;
+	compact_bool_matrix isneg;
 public:
-	point_grid(int w, int h);
-	~point_grid();
-	void set(int x, int y, point p);
-	point get(int x, int y);
-	void set(point where, point p);
-	point get(point p);
+	dir_grid(int w, int h);
+	~dir_grid();
+	void set(int x, int y, direction p);
+	direction get(int x, int y);
+	void set(point where, direction p);
+	direction get(point p);
 	//void clear(); //We never need to clear it
 };
 
@@ -70,10 +80,10 @@ enum path_type {
 class pathfinder {
 	island *isle;
 	std::priority_queue<pointwd, std::vector<pointwd>, point_comp> *heap;
-	point_grid *steps;
+	dir_grid *steps;
 	compact_bool_matrix *visited;
 
-	void consider(point p, point wherefrom, point target, int (*tilechecker)(island_tile), int intoxication);
+	void consider(point p, direction d, point target, int (*tilechecker)(island_tile), int intoxication);
 public:
 	pathfinder(island *island);
 	~pathfinder();
