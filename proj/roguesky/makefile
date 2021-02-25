@@ -1,6 +1,6 @@
 CC=g++
 CLIBS=-lraylib -lpthread
-CCFLAGS=-Wall -Wpedantic -Wextra -O0 -g
+CCFLAGS=-Wall -Wpedantic -Wextra -O3 -g
 
 CFILES:=$(wildcard src/*.cpp)
 HFILES:=$(wildcard src/*.h)

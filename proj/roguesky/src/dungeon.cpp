@@ -138,24 +138,26 @@ void dungeon::bbox_add(box &b, box a) {
 	}
 }
 
+int drunk_generator;
 int dungeon_tilechecker(island_tile t) {
+	int noise = randint(drunk_generator);
 	switch(t) {
 	case T_GEN_DUNG:
 	case T_FLOOR_TILE:
 	case T_FLOOR_PATH:
 	case T_FLOOR_CAVE:
-		return 0;
+		return noise;
 	case T_WALL_TILE:
 	case T_WALL_WOOD:
 	case T_WALL_BRICK:
 	case T_WALL_CAVE:
-		return 15;
+		return noise + 15;
 	case T_GEN_WALL:
-		return 50;
+		return noise + 50;
 	case T_GEN_FLOOR:
-		return 150;
+		return noise + 150;
 	case T_FLOOR_WOOD:
-		return 300;
+		return noise + 300;
 	default:
 		return -1;
 	}
@@ -174,7 +176,8 @@ void dungeon::connect_rooms(island *island, box ba, box bb) {
 		point b(bb);
 
 		//generate a path between the rooms
-		path *p = island->pather->drunk(a, b, dungeon_tilechecker, this->drunken);
+		drunk_generator = this->drunken;
+		path *p = island->pather->find(a, b, dungeon_tilechecker);
 		if (!p) {
 			//I have never seen this happen so I'm not sure what we should do, but nothing for now
 			return;

@@ -83,12 +83,11 @@ class pathfinder {
 	dir_grid *steps;
 	compact_bool_matrix *visited;
 
-	void consider(point p, direction d, point target, int (*tilechecker)(island_tile), int intoxication);
+	void consider(point p, direction d, point target, int (*tilechecker)(island_tile));
 public:
 	pathfinder(island *island);
 	~pathfinder();
 	path *find(point start, point end, int (*tilechecker)(island_tile));
-	path *drunk(point start, point end, int (*tilechecker)(island_tile), int intoxication);
 };
 
 int default_pathfinding_tilechecker(island_tile t);

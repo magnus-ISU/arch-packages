@@ -9,7 +9,7 @@ void draw() {
 	ClearBackground(RAYWHITE);
 }
 
-#define TILESIZE 1
+#define TILESIZE 64
 void draw_island(island *isle) {
 	for (int x = 0; x < isle->w(); x++) {
 		for (int y = 0; y < isle->h(); y++) {
@@ -35,9 +35,11 @@ void draw_island(island *isle) {
 
 #define ISLE_SIZE_X 1000
 #define ISLE_SIZE_Y 1000
-int main() {
+int main(int argc, char **argv) {
 	srand(time(0));
 	island island(ISLE_SIZE_X, ISLE_SIZE_Y);
+	if (argc > 1 && !strcmp(argv[1], "-no"))
+		return 0;
 
 	InitWindow(GetScreenWidth(), GetScreenHeight(), "Raylib example window");
 	SetTargetFPS(144);
