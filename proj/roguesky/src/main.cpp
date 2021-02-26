@@ -9,7 +9,7 @@ void draw() {
 	ClearBackground(RAYWHITE);
 }
 
-#define TILESIZE 64
+#define TILESIZE 1
 void draw_island(island *isle) {
 	for (int x = 0; x < isle->w(); x++) {
 		for (int y = 0; y < isle->h(); y++) {

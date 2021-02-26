@@ -68,9 +68,8 @@ void pathfinder::consider(point from, direction dir, point target, int (*tileche
 	this->visited->set(from, 1);
 	//Check if this is a valid tile to walk on - it wouldn't be much of a pathfinder if we could go just anywhere
 	int dist = point_distance_squared(from, target);
-	island_tile spot = (*(this->isle))[from.x][from.y];
-	//this is really not a good system, probably instead of passing a ptype we should pass a function pointer which takes an island_tile and spits out -1 for illegal or a positive number to add to dist
-	//where 0 does a default behaviour which returns 0 for pathable floor tiles and -1 for all others
+	island_tile spot = (*this->isle)[from.x][from.y];
+	//Get the difficulty of this particular spot
 	int tileval = tilechecker(spot);
 	if (-1 == tileval)
 		return;
