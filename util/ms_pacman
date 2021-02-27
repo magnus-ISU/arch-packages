@@ -2,6 +2,8 @@
 
 action=$(echo "Install Program\nRemove Program\nUpdate Programs\nAutoremove\nRemove Dependency\nClear Pacman Cache\nRemove System Journal" | dmenu -i -p "Tradwife Pacman")
 
+# Not sure how I can use this with doas instead of sudo
+
 case $action in
 "Install Program")
 	program_to_install=$(pacman -Si | awk '/^Name/{name=$3} /^Installed Size/{is=$4$5} /^Description/{sub(/^.{18}/,"",$0);{desc=$0};printf("%-18s [%-9s] -> %s\n", name, is, desc)}' | dmenu -i -l 25 | awk '{print $1}')

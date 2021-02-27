@@ -26,6 +26,8 @@ map ?w taskview_open
 
 # Basic linux commands
 map mk console mkdir%space
+map mv console rename%space
+map mV bulkrename
 map t console touch%space
 map cd console cd%space
 map man console shell -p man%space
@@ -33,7 +35,7 @@ map man console shell -p man%space
 map :  console
 map S  console shell%space
 map sh shell $SHELL
-map sf console -p6 shell  %%s
+map sf console -p6 shell %s
 map sp console shell -p%space
 map E chain draw_possible_programs; console open_with%space
 map f  console find%space
