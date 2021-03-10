@@ -20,6 +20,7 @@ ext js  = node -- "$1"
 ext php = php -- "$1"
 
 # Zathura - books and shit
+mime ^application/pdf	= zathura -- "$@"
 ext pdf|djvu|epub|cbr|cbz,	X, flag f = zathura --mode=fullscreen -- "$@"
 #ext djvu,	X, flag f = zathura -- "$@"
 #ext epub,	X, flag f = zathura -- "$@"
