@@ -81,7 +81,6 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-nb", col_gray1,
 static const char *termcmd[]    	= { "st", 0 };
 static const char *browsercmd[] 	= { "qutebrowser", 0 };
 static const char *passwordcmd[]	= { "passmenu", 0 };
-static const char *discordcmd[] 	= { "ripcord", 0 };
 static const char *packagecmd[] 	= { "/home/mag/p/util/ms_pacman", 0 };
 static const char *historycmd[] 	= { "/home/mag/p/util/dmenu_history", 0 };
 static const char *womancmd[]   	= { "/home/mag/p/util/woman", 0 };
@@ -114,7 +113,6 @@ static Key keys[] = {
 	{ MODKEY,                       XK_space,  spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_t,      spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      spawn,          {.v = browsercmd } },
-	{ MODKEY,                       XK_d,      spawn,          {.v = discordcmd } },
 
 	{ MODKEY,                       XK_p,      spawn,          {.v = packagecmd } },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = passwordcmd } },
