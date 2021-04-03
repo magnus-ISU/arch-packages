@@ -12,6 +12,7 @@ static char *font2[] = {
 	"Sazanami Mincho,さざなみ明朝:style=Mincho-Regular,Regular",
 };
 static int borderpx = 2;
+#define HISTSIZE      20000 // MUST BE CHANGED IN ST.C
 
 /*
  * What program is execed by st depends of these precedence rules:

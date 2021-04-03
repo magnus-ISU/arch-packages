@@ -78,6 +78,7 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-nb", col_gray1, "-nf", col_gold, "-sb", col_cyan, "-sf", col_gray4, NULL };
 
+/*
 static const char *termcmd[]    	= { "st", 0 };
 static const char *browsercmd[] 	= { "qutebrowser", 0 };
 static const char *passwordcmd[]	= { "passmenu", 0 };
@@ -85,6 +86,7 @@ static const char *packagecmd[] 	= { "/home/mag/p/util/ms_pacman", 0 };
 static const char *historycmd[] 	= { "/home/mag/p/util/dmenu_history", 0 };
 static const char *womancmd[]   	= { "/home/mag/p/util/woman", 0 };
 static const char *emojicmd[]   	= { "/home/mag/p/util/emoji/emoji", 0 };
+*/
 
 #include "shiftview.c"
 static Key keys[] = {
@@ -111,14 +113,15 @@ static Key keys[] = {
 
 //spawning windows
 	{ MODKEY,                       XK_space,  spawn,          {.v = dmenucmd } },
+/*
 	{ MODKEY,                       XK_t,      spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      spawn,          {.v = browsercmd } },
-
 	{ MODKEY,                       XK_p,      spawn,          {.v = packagecmd } },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = passwordcmd } },
 	{ MODKEY|ShiftMask,             XK_r,      spawn,          {.v = historycmd } },
 	{ MODKEY,                       XK_m,      spawn,          {.v = womancmd } },
 	{ MODKEY,                       XK_e,      spawn,          {.v = emojicmd } },
+*/
 
 	{ MODKEY,                       XK_x,      killclient,     {0} },
 
@@ -126,18 +129,19 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_f,      togglefloating, {0} },
 	{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
 
-//removed
-//	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-//	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-//	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-//	{ MODKEY,                       NONE,      setlayout,      {.v = &layouts[3]} }, //fib, I edited dwm.c to make this default
-//	{ MODKEY,                       NONE,      setlayout,      {.v = &layouts[4]} }, //dwindle
-//	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
-//	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-//	{ MODKEY,                       XK_Tab,    view,           {0} },
-//	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-//	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
-//	{ MODKEY|ShiftMask,             XK_Return, setlayout,      {0} },
+/*removed
+	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       NONE,      setlayout,      {.v = &layouts[3]} }, //fib, I edited dwm.c to make this default
+	{ MODKEY,                       NONE,      setlayout,      {.v = &layouts[4]} }, //dwindle
+	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
+	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
+	{ MODKEY,                       XK_Tab,    view,           {0} },
+	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+	{ MODKEY|ShiftMask,             XK_Return, setlayout,      {0} },
+*/
 
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
@@ -158,7 +162,6 @@ static Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },

@@ -16,7 +16,7 @@ def play(video):
 	global play_video
 	kill_video()
 	print("playing todo video '%s'" % (video))
-	find_video = subprocess.run(["./ysearch", video, DOWNLOADTARGET], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+	find_video = subprocess.run(["./ysearch.sh", video, DOWNLOADTARGET], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 	if find_video.returncode != 0:
 		print("Could not download todo video '%s'" % (video))
 		return
