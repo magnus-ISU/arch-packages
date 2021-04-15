@@ -3,7 +3,7 @@ CC ?= cc
 LDFLAGS = -lX11
 
 output: dwmblocks.c blocks.def.h blocks.h
-	${CC}  dwmblocks.c $(LDFLAGS) -o dwmblocks
+	${CC} -O3 dwmblocks.c $(LDFLAGS) -o dwmblocks
 blocks.h:
 	cp blocks.def.h $@
 

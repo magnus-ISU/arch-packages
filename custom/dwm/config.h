@@ -127,7 +127,7 @@ static Key keys[] = {
 
 //other
 	{ MODKEY|ShiftMask,             XK_f,      togglefloating, {0} },
-	{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
+	{ MODKEY|ShiftMask|ControlMask, XK_b,      togglebar,      {0} },
 
 /*removed
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
@@ -170,4 +170,3 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
-
