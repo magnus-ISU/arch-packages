@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ $# -lt "2" ]; then
+	echo Usage: mass_ffmpeg informat outformat
+	exit 1
+fi
+
+mp4s=$(find | grep '.'"$1" | sort)
+for f in $mp4s; do
+	new=${f/%.$1/.$2}
+	echo -n $(date) "$f" $(numfmt $(wc -c "$f" | awk '{print $1}') --to=si) '->' "$new"
+	ffmpeg -i "$f" "$new" 2>/dev/null
+	echo ' '$(numfmt $(wc -c "$new" | awk '{print $1}') --to=si)
+done
