@@ -1,0 +1,134 @@
+.TH PMENU 1
+.SH NAME
+pmenu \- pie menu utility for X
+.SH SYNOPSIS
+.B pmenu
+.RB [ \-tw ]
+.SH DESCRIPTION
+.B pmenu
+is a pie menu for X,
+it reads a list of newline-separated items from stdin,
+shows a pie menu for the user to select one of the items,
+and outputs the item selected to stdout.
+The pie menu contains one slice for each item.
+.PP
+The options are as follows:
+.TP
+.B \-t
+Draw a triangle on the border of slices that spawn a submenu.
+.TP
+.B \-w
+Disable pointer warping when a new submenu spawns.
+This option is useful when using
+.B pmenu
+with a Wacom tablet.
+.PP
+Each item read from stdin has the following format:
+.IP
+.EX
+ITEM := [TABS] (IMAGE|LABEL) [TABS OUTPUT] NEWLINE
+.EE
+.PP
+That means that each item is composed by
+tabs, followed by an optional image specificationor a label, followed by
+more tabs, followed by an output, and ended by a newline.  Brackets
+group optional elements; vertical line (|) separates elements that
+cannot be used together.
+.IP
+The initial tabs indicate the menu hierarchy:
+items indented with a tab is shown in a submenu of the preceding item not indented.
+An item without initial tabs is a top-level item.
+.IP
+The image is a string of the form "IMG:/path/to/image.png".
+It specifies a image to be shown as icon in the slice.
+.IP
+The label is the string that will be shown as a item in the menu.
+.IP
+The output is the string that will be output after selecting the item.
+If an item does not have an output, its label is used as its output.
+.IP
+The newline terminates the item specification.
+.SH USAGE
+.B pmenu
+is controlled by the mouse,
+but can also be controlled by the keyboard.
+Pie slices can be selected using
+Tab (with and without Shift),
+Enter and Esc.
+.TP
+.BR Tab
+Cycle through the slices in the clockwise direction.
+.TP
+.BR Shift-Tab
+Cycle through the items in the anticlockwise direction.
+.TP
+.BR Enter
+Select the highlighted item.
+.TP
+.B Esc
+Go to the menu above or exit pmenu.
+.SH RESOURCES
+.B
+pmenu
+understands the following X resources.
+.TP
+.B pmenu.font
+The font in which the labels should be drawn.
+.TP
+.B pmenu.background
+The background color of non-selected slices in the menu.
+.TP
+.B pmenu.foreground
+The color of the label text of non-selected slices in the menu.
+.TP
+.B pmenu.selbackground
+The background color of selected slices in the menu.
+.TP
+.B pmenu.selforeground
+The color of the label text of selected slices in the menu.
+.TP
+.B pmenu.border
+The color of the border around the menu.
+.TP
+.B pmenu.separator
+The color of the separator between slices in the menu.
+.TP
+.B pmenu.borderWidth
+The size in pixels of the border around the menu.
+.TP
+.B pmenu.separatorWidth
+The size in pixels of the slice separator.
+.TP
+.B pmenu.diameterWidth
+The size in pixels of the pie menu.
+.SH EXAMPLES
+The following script illustrates the use of
+.BR pmenu .
+The output is redirected to
+.IR sh (1),
+creating a command to be run by the shell.
+.IP
+.EX
+#!/bin/sh
+
+cat <<EOF | pmenu | sh &
+Applications
+	IMG:./firefox.png	firefox
+	IMG:./chrome.png	chrome
+	IMG:./vivaldi.png	vivaldi
+	IMG:./qute.png		qutebrowser
+	IMG:./otter.png		otterbrowser
+	IMG:./gimp.png	        gimp
+xterm				xterm
+urxvt				urxvt
+st				st
+
+Shutdown			poweroff
+Reboot				reboot
+EOF
+.EE
+.PP
+For example, by selecting \(lqApplications\(rq, a new menu will appear.
+Selecting \(lqWeb Browser\(rq in the new menu opens firefox.
+.SH SEE ALSO
+.IR xmenu (1)
