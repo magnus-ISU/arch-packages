@@ -1,0 +1,17 @@
+#!/bin/sh
+
+cat <<EOF | pmenu -w -t | sh &
+IMG:/home/mag/m/xdg/pic/pmenu-icons/librewolf.png		librewolf
+IMG:/home/mag/m/xdg/pic/pmenu-icons/dirpower.png
+	IMG:/home/mag/m/xdg/pic/pmenu-icons/poweroff.png	shutdown now
+	IMG:/home/mag/m/xdg/pic/pmenu-icons/reboot.png		reboot
+	IMG:/home/mag/m/xdg/pic/pmenu-icons/logout.png		mylogout
+IMG:/home/mag/m/xdg/pic/pmenu-icons/file_manager.png		pcmanfm
+IMG:/home/mag/m/xdg/pic/pmenu-icons/dirart.png
+	IMG:/home/mag/m/xdg/pic/pmenu-icons/blender.png		blender
+	IMG:/home/mag/m/xdg/pic/pmenu-icons/krita.png		krita
+	IMG:/home/mag/m/xdg/pic/pmenu-icons/gimp.png		gimp
+IMG:/home/mag/m/xdg/pic/pmenu-icons/dirwrite.png
+	IMG:/home/mag/m/xdg/pic/pmenu-icons/libreoffice.png	libreoffice
+	IMG:/home/mag/m/xdg/pic/pmenu-icons/notepadqq.png	notepadqq
+EOF

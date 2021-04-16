@@ -1047,87 +1047,78 @@ static void run(struct Menu *rootmenu) {
 	KeySym ksym;
 	XEvent ev;
 
-getmonitor();
-prevmenu = NULL;
-currmenu = rootmenu;
-grabpointer();
-grabkeyboard();
-placemenu(currmenu);
-prevmenu = mapmenu(currmenu, prevmenu);
-while (!XNextEvent(dpy, &ev)) {
-	switch (ev.type) {
-	case Expose:
-		if (ev.xexpose.count == 0)
-			copymenu(currmenu);
-		break;
-	case EnterNotify:
-		menu = getmenu(currmenu, ev.xcrossing.window);
-		if (menu == NULL)
+	getmonitor();
+	prevmenu = NULL;
+	currmenu = rootmenu;
+	grabpointer();
+	grabkeyboard();
+	placemenu(currmenu);
+	prevmenu = mapmenu(currmenu, prevmenu);
+	while (!XNextEvent(dpy, &ev)) {
+		switch (ev.type) {
+		case Expose:
+			if (ev.xexpose.count == 0)
+				copymenu(currmenu);
 			break;
-		slice = getslice(menu, ev.xbutton.x, ev.xbutton.y);
-		prevmenu = mapmenu(currmenu, prevmenu);
-		copymenu(currmenu);
-		break;
-	case LeaveNotify:
-		menu = getmenu(currmenu, ev.xcrossing.window);
-		if (menu == NULL)
-			break;
-		if (menu != rootmenu && menu == currmenu) {
-			currmenu = currmenu->parent;
+		case EnterNotify:
+			menu = getmenu(currmenu, ev.xcrossing.window);
+			if (menu == NULL)
+				break;
+			slice = getslice(menu, ev.xbutton.x, ev.xbutton.y);
 			prevmenu = mapmenu(currmenu, prevmenu);
-		}
-		currmenu->selected = NULL;
-		copymenu(currmenu);
-		break;
-	case MotionNotify:
-		menu = getmenu(currmenu, ev.xbutton.window);
-		slice = getslice(menu, ev.xbutton.x, ev.xbutton.y);
-		if (menu == NULL)
+			copymenu(currmenu);
 			break;
-		else if (slice == NULL)
-			menu->selected = NULL;
-		else {
-			if (menu->selected != slice) { // Magnus start
-				menu->selected = slice;
-				if (slice->submenu) {
-					//currmenu->selected = 0;
-					goto selectslice;
-				}
+		case LeaveNotify:
+			menu = getmenu(currmenu, ev.xcrossing.window);
+			if (menu == NULL)
+				break;
+			if (menu != rootmenu && menu == currmenu) {
+				currmenu = currmenu->parent;
+				prevmenu = mapmenu(currmenu, prevmenu);
 			}
-		} // Magnus end
-		copymenu(currmenu);
-		break;
-	case ButtonRelease:
-		menu = getmenu(currmenu, ev.xbutton.window);
-		slice = getslice(menu, ev.xbutton.x, ev.xbutton.y);
-		if (menu == NULL || slice == NULL)
+			currmenu->selected = NULL;
+			copymenu(currmenu);
 			break;
-	selectslice:
-		if (slice->submenu) {
-			currmenu = slice->submenu;
-		} else {
-			printf("%s\n", slice->output);
-			fflush(stdout);
-			goto done;
-		}
-		prevmenu = mapmenu(currmenu, prevmenu);
-		currmenu->selected = NULL;
-		copymenu(currmenu);
-		if (!wflag)
-			XWarpPointer(dpy, None, currmenu->win, 0, 0, 0, 0, pie.radius, pie.radius);
-		break;
-	case ButtonPress:
-		menu = getmenu(currmenu, ev.xbutton.window);
-		slice = getslice(menu, ev.xbutton.x, ev.xbutton.y);
-		if (menu == NULL || slice == NULL)
-			goto done;
-		break;
-	case KeyPress:
-		ksym = XkbKeycodeToKeysym(dpy, ev.xkey.keycode, 0, 0);
-
-			/* esc closes pmenu when current menu is the root menu */
-			if (ksym == XK_Escape && currmenu->parent == NULL)
+		case MotionNotify:
+			menu = getmenu(currmenu, ev.xbutton.window);
+			slice = getslice(menu, ev.xbutton.x, ev.xbutton.y);
+			if (menu == NULL)
+				break;
+			else if (slice == NULL)
+				menu->selected = NULL;
+			else
+				menu->selected = slice;
+			copymenu(currmenu);
+			break;
+		case ButtonRelease:
+			menu = getmenu(currmenu, ev.xbutton.window);
+			slice = getslice(menu, ev.xbutton.x, ev.xbutton.y);
+			if (ev.xbutton.button == 3)
+				goto back_menu;
+			if (menu == NULL || slice == NULL)
+				break;
+		selectslice:
+			if (slice->submenu) {
+				currmenu = slice->submenu;
+			} else {
+				printf("%s\n", slice->output);
+				fflush(stdout);
 				goto done;
+			}
+			prevmenu = mapmenu(currmenu, prevmenu);
+			currmenu->selected = NULL;
+			copymenu(currmenu);
+			if (!wflag)
+				XWarpPointer(dpy, None, currmenu->win, 0, 0, 0, 0, pie.radius, pie.radius);
+			break;
+		case ButtonPress:
+			menu = getmenu(currmenu, ev.xbutton.window);
+			slice = getslice(menu, ev.xbutton.x, ev.xbutton.y);
+			if (menu == NULL || slice == NULL)
+				goto done;
+			break;
+		case KeyPress:
+			ksym = XkbKeycodeToKeysym(dpy, ev.xkey.keycode, 0, 0);
 
 			/* Shift-Tab = ISO_Left_Tab */
 			if (ksym == XK_Tab && (ev.xkey.state & ShiftMask))
@@ -1142,7 +1133,10 @@ while (!XNextEvent(dpy, &ev)) {
 			} else if ((ksym == XK_Return) && currmenu->selected != NULL) {
 				slice = currmenu->selected;
 				goto selectslice;
-			} else if ((ksym == XK_Escape) && currmenu->parent != NULL) {
+			} else if (ksym == XK_Escape) {
+		back_menu:
+				if (!currmenu->parent)
+					goto done;
 				slice = currmenu->parent->selected;
 				currmenu = currmenu->parent;
 				prevmenu = mapmenu(currmenu, prevmenu);
