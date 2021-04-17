@@ -3,5 +3,5 @@
 *.tar*
 
 malware/
-apps/
+app/
 curious/

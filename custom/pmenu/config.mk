@@ -21,7 +21,7 @@ LIBS = -L${LOCALLIB} -L${X11LIB} -lm -lfontconfig -lXft -lX11 -lXinerama -lXrend
 
 # flags
 CPPFLAGS =
-CFLAGS = -Wall -Wextra ${INCS} ${CPPFLAGS} -O3
+CFLAGS = -Wall -Wpedantic ${INCS} ${CPPFLAGS} -O3
 LDFLAGS = ${LIBS}
 
 # compiler and linker

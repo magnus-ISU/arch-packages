@@ -1,3 +1,0 @@
-#!/bin/bash
-emojifile="$HOME/p/util/emoji/emojis"
-echo -n $(cat $emojifile | dmenu | awk '{print $1}') | xclip -selection clipboard

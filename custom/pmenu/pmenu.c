@@ -37,11 +37,15 @@ static struct Pie pie;
 static int tflag = 0; /* whether to draw triangle for submenus */
 static int wflag = 0; /* whether to disable pointer warping */
 
+/* path to config directory (for relative filenames) */
+static char *rel_path_prefix;
+static size_t rel_path_prefix_size;
+
 #include "config.h"
 
-/* show usage */
+/* show usage and exit */
 static void usage(void) {
-	(void)fprintf(stderr, "usage: pmenu [-w]\n");
+	(void)fprintf(stderr, "usage: pmenu [-wt] [--img-path /some/path/ending/in/forwardslash/]\n");
 	exit(1);
 }
 
@@ -75,26 +79,37 @@ static void getresources(void) {
 }
 
 /* get options */
-static void getoptions(int *argc, char ***argv) {
-	int ch;
+static void getoptions(char **argv) {
+	int i, j;
 
-	while ((ch = getopt(*argc, *argv, "tw")) != -1) {
-		switch (ch) {
-		case 't':
-			tflag = 1;
-			break;
-		case 'w':
-			wflag = 1;
-			break;
-		default:
+	for (i = 1; argv[i]; i++) {
+outer_for:
+		if (argv[i][0] != '-')
 			usage();
-			break;
+		for (j = 1; argv[i][j]; j++) {
+			switch (argv[i][j]) {
+			case 't':
+				tflag = !tflag;
+				break;
+			case 'w':
+				wflag = !wflag;
+				break;
+			case '-':
+				if (strcmp(argv[i] + j, "-img-path"))
+					usage();
+				j += strlen("img-path");
+				rel_path_prefix = argv[i + 1];
+				if (!rel_path_prefix)
+					usage();
+				rel_path_prefix_size = strlen(rel_path_prefix);
+				//break out to outer for loop, bit hacky because we are in a switch
+				i += 2;
+				if (!argv[i])
+					return;
+				goto outer_for;
+			}
 		}
 	}
-	*argc -= optind;
-	*argv += optind;
-	if (*argc > 0)
-		usage();
 }
 
 /* get color from color string */
@@ -230,15 +245,6 @@ static void initpie(void) {
 	XFillArc(dpy, pie.bounding, pie.gc, 0, 0, pie.fulldiameter, pie.fulldiameter, 0, 360 * 64);
 }
 
-/* call strdup checking for error */
-static char *estrdup(const char *s) {
-	char *t;
-
-	if ((t = strdup(s)) == NULL)
-		err(1, "strdup");
-	return t;
-}
-
 /* call malloc checking for error */
 static void *emalloc(size_t size) {
 	void *p;
@@ -248,6 +254,23 @@ static void *emalloc(size_t size) {
 	return p;
 }
 
+/* call strdup checking for error */
+static char *estrdup(const char *s) {
+	char *t;
+#pragma GCC diagnostic ignored "-Wnonnull"
+	if (!(t = strdup(s)))
+		err(1, "strdup");
+	return t;
+}
+
+static char *estrdup_prefix(const char s[static 1], const char p[static 1], size_t sizeof_p) {
+#pragma GCC diagnostic ignored "-Wnonnull"
+	char *retval = emalloc(sizeof_p + strlen(s) + 1);
+	strcpy(retval, p);
+	strcpy(retval + sizeof_p, s);
+	return retval;
+}
+
 /* allocate an slice */
 static struct Slice *allocslice(const char *label, const char *output, char *file) {
 	struct Slice *slice;
@@ -255,7 +278,14 @@ static struct Slice *allocslice(const char *label, const char *output, char *fil
 	slice = emalloc(sizeof *slice);
 	slice->label = label ? estrdup(label) : NULL;
 	slice->output = (label == output) ? slice->label : estrdup(output);
-	slice->file = file ? estrdup(file) : NULL;
+	//If a relative path, add rel_path_prefix as a prefix
+	if (!file) {
+		slice->file = 0;
+	} else if ('/' != file[0]) {
+		slice->file = estrdup_prefix(file, rel_path_prefix, rel_path_prefix_size);
+	} else {
+		slice->file = estrdup(file);
+	}
 	slice->y = 0;
 	slice->labellen = (slice->label) ? strlen(slice->label) : 0;
 	slice->next = NULL;
@@ -1212,6 +1242,7 @@ static void cleandc(void) {
 
 /* pmenu: generate a pie menu from stdin and print selected entry to stdout */
 int main(int argc, char *argv[]) {
+	(void)argc;
 	struct Menu *rootmenu;
 
 	/* open connection to server and set X variables */
@@ -1228,7 +1259,7 @@ int main(int argc, char *argv[]) {
 
 	/* get configuration */
 	getresources();
-	getoptions(&argc, &argv);
+	getoptions(argv);
 
 	/* imlib2 stuff */
 	imlib_set_cache_size(2048 * 1024);

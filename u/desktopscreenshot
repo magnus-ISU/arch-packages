@@ -1,0 +1,3 @@
+#!/bin/sh
+ffmpeg -f x11grab -framerate 1 -video_size 1920x1080 -i :0.0 -vframes 1 "$1"'.jpeg'
+notify-send "Screenshot Taken" "$1"
